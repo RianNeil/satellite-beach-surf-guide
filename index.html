@@ -1072,6 +1072,229 @@
       font-weight: 600;
       letter-spacing: 0;
     }
+    .level-bar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-end;
+      gap: var(--space-3);
+    }
+    .level-picker {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-1);
+      margin: 0;
+      padding: var(--space-1);
+      border: 1px solid rgba(47, 122, 118, 0.25);
+      border-radius: var(--radius-lg);
+      background: rgba(247, 244, 239, 0.92);
+    }
+    .level-picker legend {
+      flex-basis: 100%;
+      padding: 0 var(--space-2);
+      color: var(--color-muted);
+      font-family: var(--font-body);
+      font-size: var(--fs-caption);
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .level-picker label {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 44px;
+      padding: 0 var(--space-2);
+      border-radius: var(--radius-pill);
+      color: var(--color-ocean);
+      font-family: var(--font-body);
+      font-size: var(--fs-small);
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .level-picker label:has(input:checked) {
+      background: var(--color-ocean);
+      color: var(--color-foam);
+    }
+    .level-picker label:focus-within {
+      outline: 2px solid var(--color-sunrise);
+      outline-offset: 3px;
+    }
+    .level-picker input {
+      position: absolute;
+      opacity: 0;
+      width: 1px;
+      height: 1px;
+    }
+    .gentle-row { max-width: 18rem; }
+    .gentle-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-1);
+      min-height: 44px;
+      color: var(--color-ocean);
+      font-family: var(--font-body);
+      font-size: var(--fs-small);
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .gentle-toggle input { width: 1.1rem; height: 1.1rem; accent-color: var(--color-ocean); }
+    .safety-banner {
+      margin: 0;
+      padding: var(--space-2) var(--space-3);
+      border-left: 4px solid var(--color-poor);
+      border-radius: var(--radius-sm);
+      background: var(--color-sunrise-soft);
+      color: var(--color-ink);
+      font-size: var(--fs-small);
+      line-height: 1.5;
+    }
+    .safety-banner[hidden] { display: none; }
+    .score-block {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: var(--space-1);
+      max-width: 16rem;
+      text-align: right;
+    }
+    .score-kicker, .score-verdict, .model-note {
+      margin: 0;
+      color: var(--color-ink);
+      font-family: var(--font-body);
+      font-size: var(--fs-small);
+      font-weight: 500;
+      line-height: 1.4;
+    }
+    .score-kicker { color: var(--color-muted); font-size: var(--fs-caption); letter-spacing: 0.04em; text-transform: uppercase; }
+    .score-ring {
+      --score: 0;
+      display: grid;
+      place-items: center;
+      width: 5.75rem;
+      height: 5.75rem;
+      border-radius: 50%;
+      background: conic-gradient(var(--ring, var(--color-sea-glass)) calc(var(--score) * 36deg), rgba(7, 42, 64, 0.12) 0);
+      box-shadow: inset 0 0 0 1px rgba(7, 42, 64, 0.12);
+    }
+    .score-ring[data-band="low"] { --ring: var(--color-poor); }
+    .score-ring[data-band="mid"] { --ring: var(--color-sunrise); }
+    .score-ring[data-band="upper"] { --ring: var(--color-sand); }
+    .score-ring[data-band="top"] { --ring: var(--color-sea-glass); }
+    .score-ring[data-band="none"] { --ring: rgba(7, 42, 64, 0.2); }
+    .score-ring-inner {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 4.35rem;
+      height: 4.35rem;
+      border-radius: 50%;
+      background: var(--color-foam);
+    }
+    .score-num {
+      color: var(--color-ocean);
+      font-family: var(--font-display);
+      font-size: 1.75rem;
+      font-weight: 600;
+      font-variant-numeric: lining-nums tabular-nums;
+      line-height: 1;
+    }
+    .score-denom {
+      color: var(--color-muted);
+      font-family: var(--font-body);
+      font-size: var(--fs-caption);
+      font-weight: 600;
+    }
+    .hazard-row, .why-chips, .level-compare, .why-notes {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-1);
+      margin: var(--space-2) 0 0;
+      padding: 0;
+    }
+    .why-notes { display: block; margin: var(--space-2) 0 0 var(--space-3); }
+    .why-notes li { margin: 0 0 var(--space-1); color: var(--color-ink); font-size: var(--fs-small); }
+    .hazard-chip, .why-chips li, .hazard-chip-static, .hazard-chip-quiet {
+      display: inline-flex;
+      align-items: center;
+      min-height: 32px;
+      padding: 0 var(--space-2);
+      border: 1px solid var(--color-poor);
+      border-radius: var(--radius-pill);
+      color: var(--color-poor);
+      font-family: var(--font-body);
+      font-size: var(--fs-caption);
+      font-weight: 600;
+      text-decoration: none;
+    }
+    .why-chips li, .hazard-chip-quiet {
+      border-color: rgba(7, 42, 64, 0.25);
+      color: var(--color-ocean);
+    }
+    .level-compare li {
+      display: flex;
+      flex-direction: column;
+      min-width: 6.5rem;
+      min-height: 44px;
+      padding: var(--space-1) var(--space-2);
+      border-radius: var(--radius-sm);
+      background: rgba(232, 212, 176, 0.55);
+      color: var(--color-ink);
+      font-family: var(--font-body);
+      font-size: var(--fs-caption);
+    }
+    .level-compare strong {
+      color: var(--color-ocean);
+      font-family: var(--font-body);
+      font-size: var(--fs-h4);
+      font-variant-numeric: tabular-nums lining-nums;
+    }
+    .level-compare .is-selected { outline: 2px solid var(--color-ocean); }
+    .why { margin-top: var(--space-2); }
+    .why summary {
+      min-height: 44px;
+      color: var(--color-ocean);
+      font-family: var(--font-body);
+      font-size: var(--fs-small);
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .why-row {
+      display: grid;
+      grid-template-columns: 4.5rem 1fr auto;
+      gap: var(--space-1);
+      align-items: center;
+      margin-top: var(--space-1);
+      color: var(--color-ink);
+      font-size: var(--fs-caption);
+    }
+    .why-meter {
+      display: block;
+      height: 8px;
+      overflow: hidden;
+      border-radius: var(--radius-pill);
+      background: rgba(7, 42, 64, 0.08);
+    }
+    .why-meter span {
+      display: block;
+      height: 100%;
+      background: var(--color-sea-glass);
+    }
+    .confidence-tag {
+      display: inline-block;
+      margin-right: var(--space-1);
+      padding: 0 var(--space-1);
+      border-radius: var(--radius-pill);
+      background: var(--color-sunrise-soft);
+      color: var(--color-ink);
+      font-size: var(--fs-caption);
+      font-weight: 600;
+    }
+    .hour-scroll td.is-best, .hour-scroll th.is-best {
+      background: var(--color-sea-glass-soft);
+      font-weight: 600;
+    }
     .metrics {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -1172,10 +1395,12 @@
       color: var(--color-foam);
       text-decoration: none;
     }
-    @media (max-width: 767px) {
+      @media (max-width: 767px) {
       .metrics { grid-template-columns: 1fr; }
       .metrics .wide { grid-column: auto; }
       .condition-card { padding: var(--space-3); }
+      .score-block { align-items: flex-start; text-align: left; }
+      .level-picker { border-radius: var(--radius-md); }
     }
     @media (min-width: 768px) {
       .condition-card { padding: var(--space-4); }
@@ -1352,24 +1577,35 @@
     <section class="band reveal" id="conditions" aria-labelledby="conditions-title">
       <div class="wrap stack">
         <h2 class="section-title" id="conditions-title">Conditions &amp; Forecasts</h2>
-      <p class="conditions-lead">Near-term wave, swell, and wind estimates for Satellite Beach, Cocoa Beach, and Melbourne Beach.</p>
+      <p class="conditions-lead">Near-term wave, swell, and wind estimates for Satellite Beach, Cocoa Beach, and Melbourne Beach, scored for the level you pick.</p>
       <p id="conditions-status" class="conditions-status" role="status" aria-live="polite" aria-busy="true">Loading live conditions…</p>
+      <div id="conditions-safety" class="safety-banner" hidden></div>
+      <div class="level-bar" id="conditions-controls">
+        <fieldset class="level-picker">
+          <legend>Score for</legend>
+          <label><input type="radio" name="sbsg-level" value="beginner" checked> <span>Beginner</span></label>
+          <label><input type="radio" name="sbsg-level" value="intermediate"> <span>Intermediate</span></label>
+          <label><input type="radio" name="sbsg-level" value="advanced"> <span>Advanced</span></label>
+        </fieldset>
+        <div class="gentle-row">
+          <label class="gentle-toggle">
+            <input type="checkbox" id="gentle-mode">
+            <span>Gentle mode</span>
+          </label>
+          <p class="card-note" id="gentle-help">Optional. Scores a tighter range for smaller surf.</p>
+        </div>
+      </div>
       <div id="conditions-root"></div>
       <noscript>
         <p>Live model numbers need JavaScript. The official source links below still work.</p>
       </noscript>
       <div class="conditions-notes">
         <h3>How we rate</h3>
-        <p>Poor, Fair, and Good are estimates for an east-facing Space Coast beach. They are not a report from the water.</p>
-        <p>The compass label is the nearest of 16 points. Southwest, west-southwest, and west count as offshore. Northeast, east-northeast, and east count as onshore. Any other point counts as cross-shore. A rounded speed of 0 mph is calm, and calm ignores direction.</p>
-        <ul>
-          <li>Wave height: 2 points from 2 to 5 ft. 1 point from 1.5 ft up to 2 ft, or from just over 5 ft through 7 ft. 0 points otherwise.</li>
-          <li>Period: the swell period when the model has one, otherwise the combined wave period. A reported period of 0 seconds is treated as missing. 2 points at 10 seconds or longer. 1 point from 8 seconds up to 10. 0 points under 8 seconds.</li>
-          <li>Wind: offshore scores 2 points at 18 mph or less and 1 point if stronger. Onshore scores 0 points at 12 mph or more and 1 point if lighter. Cross-shore scores 1 point at 18 mph or less and 0 if stronger. Calm scores 1 point.</li>
-        </ul>
-        <p>Add the three scores. 5 or 6 is Good. 3 or 4 is Fair. 2 or less is Poor. If the wave-height score is 0 (under 1.5 ft or over 7 ft), the label stops at Fair.</p>
-        <p>Before scoring, wave height and period are rounded to the nearest tenth, speed to the nearest mile per hour, and direction to the nearest degree. On each card, the estimate uses the current wave height, period, and wind. In the five-day table, wave height is the highest hour that day, period is the period in that same hour, and wind is the average from 7:00 a.m. through 6:00 p.m. ET. That speed is the mean of those hours. The direction is the speed-weighted average.</p>
-        <p class="disclaimer">These numbers are model forecasts and estimates, not measurements on the beach, and they are not a substitute for checking the conditions yourself. Waves and swell come from the NOAA GFS Wave model (0.16°) through <a href="https://open-meteo.com/">Open-Meteo</a>, at the nearest sea cell, a few miles offshore. Wind is an Open-Meteo forecast at each beach. Water temperature, when shown, is the model sea-surface temperature. Tide predictions are for the Port Canaveral station, not the beach.</p>
+        <p>Each beach gets a whole-number score from 0 to 10 for the level you pick: Beginner, Intermediate, or Advanced. The same waves can score very differently. This is a model estimate, not a report from the water, and it is not a reason to ignore the flags or a lifeguard.</p>
+        <p>The score uses the GFS offshore wave height and period, the swell direction against that beach, and the wind. Effective wind is the greater of the speed and three-quarters of the gust, and chop counts from the first mile per hour. Wind direction is a continuous angle from offshore, not a 16-point onshore/cross/offshore bucket. The shore-facing estimates, measured from these coordinates with the ocean to the east, are about 88° at Cocoa Beach, 78° at Satellite Beach, and 75° at Melbourne Beach. Tide only nudges the score, and that preference is low confidence. Gentle mode is optional and tightens the beginner range toward smaller surf.</p>
+        <p>Beginner scores stay capped while a rip risk is in effect: 3 when the risk is high, 6 when it is moderate. Intermediate scores drop by 1, and the card keeps a warning. Until the model separates swell from wind sea, intermediate scores stop at 8. Strong offshore wind caps a beginner score around 5, because paddling back in is hard. More than about 24 hours out, hazards may be unknown, and a beginner score will not read as a decision to paddle out. A tropical or hurricane swell is not scored. If the rip check does not come back, beginner scores stay hidden. Missing wave height or period shows “No estimate.”</p>
+        <p>The five-day table uses daylight hours only, 7:00 a.m. through 6:00 p.m. ET. For today it starts at the current hour, so an overnight peak is not the day’s wave. The score in that table is the best daytime hour for the level you picked.</p>
+        <p class="disclaimer">These numbers are model forecasts and estimates, not measurements on the beach. The large wave number is the NOAA GFS Wave model (0.16°) through <a href="https://open-meteo.com/">Open-Meteo</a>, at the nearest sea cell. When GFS, MeteoFrance, and ECMWF WAM differ by more than about 40%, the card says so and shows the range. GFS stays the primary number. Wind now is the NOAA Trident Pier observation when it is fresh. Hourly wind is an Open-Meteo sea-side cell, and the page checks that the returned point actually moved east of the inland cell. Rip and surf hazards for all three beaches come from NWS zone FLZ747, including the Melbourne surf zone forecast. Cocoa Beach Pier’s marine zone is not used for rip alerts. Water temperature, when shown, is the model sea-surface temperature. Tide predictions are for Port Canaveral, not the beach.</p>
         <h3>Official sources</h3>
         <p class="sources">Cross-check the model: <a href="https://www.ndbc.noaa.gov/station_page.php?station=41113">NDBC buoy 41113 (Canaveral Nearshore)</a>, <a href="https://www.ndbc.noaa.gov/station_page.php?station=41009">NDBC buoy 41009 (Canaveral East)</a>, <a href="https://www.weather.gov/mlb/">NWS Melbourne</a>, and <a href="https://tidesandcurrents.noaa.gov/stationhome.html?id=8721604">NOAA tides at Port Canaveral (Trident Pier)</a>.</p>
         <p id="tide-line" class="tide-line" aria-live="polite"></p>
@@ -1514,822 +1750,7 @@
     })();
   </script>
 
-  <script>
-    /*
-     * Beach coordinates (WGS84), looked up November 2026. These are the
-     * oceanfront landmarks we request. Open-Meteo then snaps each marine
-     * query to the nearest sea cell of the model grid, which sits a few
-     * miles offshore.
-     *
-     * Satellite Beach: 28.1944, -80.5944
-     *   Hightower Beach Park, 815 Jimmy Buffett Memorial Highway (A1A).
-     *   OpenStreetMap places the park at 28.1943902, -80.5943672.
-     *
-     * Cocoa Beach: 28.3678, -80.6018
-     *   Cocoa Beach Pier, 401 Meade Avenue.
-     *   OpenStreetMap: 28.3677508, -80.6017967.
-     *   Apple Maps lists the pier at 28.36779, -80.60292.
-     *
-     * Melbourne Beach: 28.0684, -80.5570
-     *   East end of Ocean Avenue, on the beach side of the dune.
-     *   OpenStreetMap places that eastern Ocean Avenue segment at
-     *   28.06841, -80.55701.
-     *
-     * Waves and swell use Open-Meteo Marine model ncep_gfswave016
-     * (NOAA NCEP GFS Wave, 0.16°) with cell_selection=sea. That model
-     * returns swell height, period, and direction, and its sea-cell grid
-     * gives each of these three beaches its own cell. Wind uses the
-     * Open-Meteo forecast API at the same beach coordinates. Sea-surface
-     * temperature, when the marine API has it, comes from a second marine
-     * request (the GFS wave model does not carry water temperature).
-     * Responses are matched to beaches in request order.
-     *
-     * Rating rule (east-facing Space Coast beach). Keep this comment in
-     * step with the "How we rate" note in the page.
-     *
-     * Compass label = nearest of 16 points (N, NNE, NE, ENE, E, ESE, SE,
-     * SSE, S, SSW, SW, WSW, W, WNW, NW, NNW). Before scoring, wave height
-     * and period are rounded to the nearest tenth, speed to the nearest
-     * mph, and direction to the nearest degree.
-     *   Offshore: compass is SW, WSW, or W.
-     *   Onshore:  compass is NE, ENE, or E.
-     *   Cross-shore: any other compass point.
-     *   Calm: rounded speed is 0 mph. Direction is ignored.
-     *
-     * Size points from significant wave height (feet):
-     *   2.0–5.0 ft → 2
-     *   1.5 ft up to 2.0, or just over 5.0 through 7.0 → 1
-     *   otherwise → 0
-     * Period points (swell period if present, else combined wave period;
-     * a reported period of 0 seconds is treated as missing):
-     *   >= 10 s → 2
-     *   8 s up to 10 s → 1
-     *   under 8 s, or missing → 0
-     * Wind points:
-     *   calm → 1
-     *   offshore and <= 18 mph → 2; offshore and stronger → 1
-     *   onshore and >= 12 mph → 0; onshore and lighter → 1
-     *   cross-shore and <= 18 mph → 1; cross-shore and stronger → 0
-     * Label from the sum (0–6):
-     *   5–6 Good, 3–4 Fair, 0–2 Poor.
-     *   If size points are 0, the label is capped at Fair.
-     * Card rating uses the current hour. A day rating uses that day's
-     * highest wave, the period in that same hour, and the 7:00 a.m.–
-     * 6:00 p.m. ET wind (mean speed, speed-weighted direction).
-     */
-    (function () {
-      var SPOTS = [
-        { id: "satellite", name: "Satellite Beach", lat: 28.1944, lon: -80.5944 },
-        { id: "cocoa", name: "Cocoa Beach", lat: 28.3678, lon: -80.6018 },
-        { id: "melbourne", name: "Melbourne Beach", lat: 28.0684, lon: -80.5570 }
-      ];
-
-      var COMPASS = ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"];
-      var OFFSHORE = { SW: 1, WSW: 1, W: 1 };
-      var ONSHORE = { NE: 1, ENE: 1, E: 1 };
-      var WEEKDAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-      var MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-
-      var statusEl = document.getElementById("conditions-status");
-      var rootEl = document.getElementById("conditions-root");
-      var tideEl = document.getElementById("tide-line");
-
-      function num(value) {
-        var n = typeof value === "number" ? value : parseFloat(value);
-        return Number.isFinite(n) ? n : null;
-      }
-
-      function normalizeDeg(deg) {
-        return ((deg % 360) + 360) % 360;
-      }
-
-      function compassLabel(deg) {
-        var index = Math.round(normalizeDeg(deg) / 22.5) % 16;
-        return COMPASS[index];
-      }
-
-      function roundedMph(mph) {
-        return Math.round(mph);
-      }
-
-      function roundedDeg(deg) {
-        return Math.round(normalizeDeg(deg)) % 360;
-      }
-
-      function sizePoints(feet) {
-        if (feet >= 2 && feet <= 5) return 2;
-        if ((feet >= 1.5 && feet < 2) || (feet > 5 && feet <= 7)) return 1;
-        return 0;
-      }
-
-      function periodPoints(seconds) {
-        if (!Number.isFinite(seconds)) return 0;
-        if (seconds >= 10) return 2;
-        if (seconds >= 8) return 1;
-        return 0;
-      }
-
-      function windSector(degRounded) {
-        var label = compassLabel(degRounded);
-        if (OFFSHORE[label]) return "offshore";
-        if (ONSHORE[label]) return "onshore";
-        return "cross-shore";
-      }
-
-      function windPoints(mphRounded, degRounded) {
-        if (mphRounded === 0) return 1;
-        var sector = windSector(degRounded);
-        if (sector === "offshore") return mphRounded <= 18 ? 2 : 1;
-        if (sector === "onshore") return mphRounded >= 12 ? 0 : 1;
-        return mphRounded <= 18 ? 1 : 0;
-      }
-
-      function tenths(value) {
-        return Math.round(value * 10) / 10;
-      }
-
-      function rateConditions(feet, seconds, mph, deg) {
-        if (!Number.isFinite(feet) || !Number.isFinite(mph)) return null;
-        var mphRounded = roundedMph(mph);
-        if (mphRounded !== 0 && !Number.isFinite(deg)) return null;
-        var size = sizePoints(tenths(feet));
-        var period = periodPoints(Number.isFinite(seconds) ? tenths(seconds) : seconds);
-        var wind = windPoints(mphRounded, Number.isFinite(deg) ? roundedDeg(deg) : 0);
-        var total = size + period + wind;
-        var label = total >= 5 ? "Good" : total >= 3 ? "Fair" : "Poor";
-        if (size === 0 && label === "Good") label = "Fair";
-        return { label: label, sizePoints: size, periodPoints: period, windPoints: wind };
-      }
-
-      function toFeet(value, unit) {
-        var n = num(value);
-        if (n == null) return null;
-        var u = String(unit || "").toLowerCase();
-        if (u === "ft" || u.indexOf("foot") !== -1 || u.indexOf("feet") !== -1) return n;
-        if (u === "m" || u.indexOf("meter") !== -1 || u.indexOf("metre") !== -1) return n * 3.280839895;
-        return null;
-      }
-
-      function toSeconds(value, unit) {
-        var n = num(value);
-        // A 0 second period means that swell component was not resolved.
-        if (n == null || n <= 0) return null;
-        var u = String(unit || "s").toLowerCase();
-        if (u === "s" || u.indexOf("sec") === 0) return n;
-        return null;
-      }
-
-      function toDegrees(value, unit) {
-        var n = num(value);
-        if (n == null) return null;
-        var u = String(unit || "°").toLowerCase();
-        if (u.indexOf("°") !== -1 || u.indexOf("deg") !== -1 || u === "") return normalizeDeg(n);
-        return null;
-      }
-
-      function toMph(value, unit) {
-        var n = num(value);
-        if (n == null) return null;
-        var u = String(unit || "").toLowerCase();
-        if (u.indexOf("mp/h") !== -1 || u === "mph") return n;
-        if (u === "km/h" || u === "kmh") return n / 1.609344;
-        if (u === "m/s" || u === "ms") return n * 2.236936;
-        if (u === "kn" || u.indexOf("knot") !== -1) return n * 1.15078;
-        return null;
-      }
-
-      function waterFahrenheit(value, unit) {
-        var n = num(value);
-        if (n == null) return null;
-        var u = String(unit || "").toLowerCase();
-        if (u.indexOf("c") !== -1) return n * 9 / 5 + 32;
-        if (u.indexOf("f") !== -1) return n;
-        return null;
-      }
-
-      function parseWall(iso) {
-        var match = /^(\d{4})-(\d{2})-(\d{2})[T ](\d{2}):(\d{2})/.exec(iso || "");
-        if (!match) return null;
-        return {
-          y: +match[1],
-          mo: +match[2],
-          d: +match[3],
-          h: +match[4],
-          mi: +match[5],
-          key: match[1] + "-" + match[2] + "-" + match[3] + "T" + match[4] + ":" + match[5]
-        };
-      }
-
-      function weekdayIndex(wall) {
-        return new Date(Date.UTC(wall.y, wall.mo - 1, wall.d)).getUTCDay();
-      }
-
-      function formatWall(wall) {
-        var hour = wall.h % 12 || 12;
-        var suffix = wall.h < 12 ? "AM" : "PM";
-        var minute = String(wall.mi).padStart(2, "0");
-        return WEEKDAYS[weekdayIndex(wall)] + ", " + MONTHS[wall.mo - 1] + " " + wall.d + ", " + hour + ":" + minute + " " + suffix + " ET";
-      }
-
-      function formatHour(wall, withDay) {
-        var hour = wall.h % 12 || 12;
-        var suffix = wall.h < 12 ? "AM" : "PM";
-        var time = hour + " " + suffix;
-        if (!withDay) return time;
-        return WEEKDAYS[weekdayIndex(wall)] + " " + time;
-      }
-
-      function formatDay(wall, today) {
-        var label = WEEKDAYS[weekdayIndex(wall)] + ", " + MONTHS[wall.mo - 1] + " " + wall.d;
-        if (today && wall.y === today.y && wall.mo === today.mo && wall.d === today.d) return label + " (today)";
-        return label;
-      }
-
-      function easternNow(date) {
-        var fmt = new Intl.DateTimeFormat("en-US", {
-          timeZone: "America/New_York",
-          year: "numeric",
-          month: "2-digit",
-          day: "2-digit",
-          hour: "2-digit",
-          minute: "2-digit",
-          hourCycle: "h23"
-        });
-        var parts = {};
-        fmt.formatToParts(date || new Date()).forEach(function (part) {
-          parts[part.type] = part.value;
-        });
-        var hour = +parts.hour;
-        if (hour === 24) hour = 0;
-        return { y: +parts.year, mo: +parts.month, d: +parts.day, h: hour, mi: +parts.minute };
-      }
-
-      function stamp(wall) {
-        return Date.UTC(wall.y, wall.mo - 1, wall.d, wall.h, wall.mi || 0);
-      }
-
-      function addDays(wall, days) {
-        var shifted = new Date(Date.UTC(wall.y, wall.mo - 1, wall.d + days));
-        return { y: shifted.getUTCFullYear(), mo: shifted.getUTCMonth() + 1, d: shifted.getUTCDate(), h: 0, mi: 0 };
-      }
-
-      function ymdCompact(wall) {
-        return String(wall.y) + String(wall.mo).padStart(2, "0") + String(wall.d).padStart(2, "0");
-      }
-
-      function el(tag, className, text) {
-        var node = document.createElement(tag);
-        if (className) node.className = className;
-        if (text != null) node.textContent = text;
-        return node;
-      }
-
-      function na() {
-        var node = el("span", null, "n/a");
-        node.setAttribute("aria-label", "Not available");
-        return node;
-      }
-
-      function locationList(data) {
-        if (Array.isArray(data)) return data;
-        if (data && data.latitude != null && !data.error) return [data];
-        return null;
-      }
-
-      function unitsOf(block, fallback) {
-        return (block && (block.current_units || block.hourly_units)) || fallback || {};
-      }
-
-      function hourMap(times, values, convert) {
-        var map = {};
-        if (!times || !values) return map;
-        for (var i = 0; i < times.length; i++) {
-          var wall = parseWall(times[i]);
-          if (!wall) continue;
-          map[wall.key] = convert(values[i]);
-        }
-        return map;
-      }
-
-      function buildMarine(block) {
-        var units = unitsOf(block);
-        var hourly = block.hourly || {};
-        var current = block.current || {};
-        var waves = hourMap(hourly.time, hourly.wave_height, function (v) { return toFeet(v, units.wave_height); });
-        var swellHeights = hourMap(hourly.time, hourly.swell_wave_height, function (v) { return toFeet(v, units.swell_wave_height); });
-        var swellPeriods = hourMap(hourly.time, hourly.swell_wave_period, function (v) { return toSeconds(v, units.swell_wave_period); });
-        var swellDirs = hourMap(hourly.time, hourly.swell_wave_direction, function (v) { return toDegrees(v, units.swell_wave_direction); });
-        var wavePeriods = hourMap(hourly.time, hourly.wave_period, function (v) { return toSeconds(v, units.wave_period); });
-        var currentWall = parseWall(current.time);
-        return {
-          time: currentWall,
-          waveFt: currentWall ? (toFeet(current.wave_height, units.wave_height) != null ? toFeet(current.wave_height, units.wave_height) : waves[currentWall.key]) : null,
-          swellFt: currentWall ? (toFeet(current.swell_wave_height, units.swell_wave_height) != null ? toFeet(current.swell_wave_height, units.swell_wave_height) : swellHeights[currentWall.key]) : null,
-          swellPeriod: currentWall ? (toSeconds(current.swell_wave_period, units.swell_wave_period) != null ? toSeconds(current.swell_wave_period, units.swell_wave_period) : swellPeriods[currentWall.key]) : null,
-          swellDir: currentWall ? (toDegrees(current.swell_wave_direction, units.swell_wave_direction) != null ? toDegrees(current.swell_wave_direction, units.swell_wave_direction) : swellDirs[currentWall.key]) : null,
-          wavePeriod: currentWall ? (toSeconds(current.wave_period, units.wave_period) != null ? toSeconds(current.wave_period, units.wave_period) : wavePeriods[currentWall.key]) : null,
-          times: (hourly.time || []).map(parseWall).filter(Boolean),
-          waves: waves,
-          swellPeriods: swellPeriods,
-          wavePeriods: wavePeriods
-        };
-      }
-
-      function buildWind(block) {
-        if (!block) return null;
-        var units = unitsOf(block);
-        var hourly = block.hourly || {};
-        var current = block.current || {};
-        var speeds = hourMap(hourly.time, hourly.wind_speed_10m, function (v) { return toMph(v, units.wind_speed_10m); });
-        var dirs = hourMap(hourly.time, hourly.wind_direction_10m, function (v) { return toDegrees(v, units.wind_direction_10m); });
-        var currentWall = parseWall(current.time);
-        var speed = toMph(current.wind_speed_10m, units.wind_speed_10m);
-        var dir = toDegrees(current.wind_direction_10m, units.wind_direction_10m);
-        if (currentWall) {
-          if (speed == null) speed = speeds[currentWall.key];
-          if (dir == null) dir = dirs[currentWall.key];
-        }
-        return {
-          time: currentWall,
-          speed: speed,
-          dir: dir,
-          gust: toMph(current.wind_gusts_10m, units.wind_gusts_10m),
-          speeds: speeds,
-          dirs: dirs
-        };
-      }
-
-      function periodAt(marine, key) {
-        if (!marine) return null;
-        if (marine.swellPeriods[key] != null) return marine.swellPeriods[key];
-        return marine.wavePeriods[key] != null ? marine.wavePeriods[key] : null;
-      }
-
-      function currentPeriod(marine) {
-        if (!marine) return null;
-        if (marine.swellPeriod != null) return marine.swellPeriod;
-        return marine.wavePeriod;
-      }
-
-      function formatFeet(feet) {
-        return feet == null ? null : tenths(feet).toFixed(1) + " ft";
-      }
-
-      function formatSeconds(seconds) {
-        return seconds == null ? null : tenths(seconds).toFixed(1) + " s";
-      }
-
-      function windPhrase(mph, deg) {
-        if (mph == null) return null;
-        var speed = roundedMph(mph);
-        if (speed === 0) return { text: "Calm", aria: "Calm, 0 miles per hour", sector: "calm" };
-        if (deg == null) return { text: speed + " mph", aria: speed + " miles per hour, direction not available", sector: null };
-        var direction = roundedDeg(deg);
-        var point = compassLabel(direction);
-        var sector = windSector(direction);
-        return {
-          text: speed + " mph from " + direction + "° " + point + ", " + sector,
-          shortSpeed: speed + " mph",
-          shortDir: direction + "° " + point,
-          aria: speed + " miles per hour from " + direction + " degrees " + point + ", " + sector,
-          sector: sector
-        };
-      }
-
-      function ratingElement(result) {
-        if (!result) {
-          var missing = el("span", "rating rating-na", "Unavailable");
-          missing.setAttribute("aria-label", "Estimate unavailable");
-          return missing;
-        }
-        var badge = el("span", "rating rating-" + result.label.toLowerCase(), result.label);
-        badge.setAttribute("aria-label", result.label + ". Size " + result.sizePoints + ", period " + result.periodPoints + ", wind " + result.windPoints + ".");
-        return badge;
-      }
-
-      function scoreText(result) {
-        if (!result) return "Estimate needs both a wave height and a wind reading.";
-        return "Scores: size " + result.sizePoints + ", period " + result.periodPoints + ", wind " + result.windPoints + ".";
-      }
-
-      function appendStat(list, wide, label, valueNode) {
-        var wrap = el("div", wide ? "wide" : "");
-        wrap.appendChild(el("dt", null, label));
-        var dd = el("dd");
-        dd.appendChild(valueNode);
-        wrap.appendChild(dd);
-        list.appendChild(wrap);
-      }
-
-      function textOrNa(text) {
-        return text == null ? na() : document.createTextNode(text);
-      }
-
-      function renderHourTable(spot, marine, wind) {
-        if (!marine || !marine.time || !marine.times.length) return null;
-        var startIndex = 0;
-        for (var i = 0; i < marine.times.length; i++) {
-          if (marine.times[i].key <= marine.time.key) startIndex = i;
-          else break;
-        }
-        var hours = marine.times.slice(startIndex, startIndex + 12);
-        if (!hours.length) return null;
-
-        var block = el("div");
-        block.appendChild(el("p", "card-note", "Wave height, period, and wind for the next 12 hours. On a small screen, scroll sideways for later hours."));
-        var scroller = el("div", "hour-scroll");
-        scroller.tabIndex = 0;
-        scroller.setAttribute("role", "region");
-        scroller.setAttribute("aria-label", "Next 12 hours at " + spot.name + ", scroll horizontally");
-
-        var table = document.createElement("table");
-        var caption = el("caption", "sr-only", "Wave height, period, and wind for the next 12 hours.");
-        table.appendChild(caption);
-        var thead = document.createElement("thead");
-        var headRow = document.createElement("tr");
-        var corner = el("th");
-        corner.setAttribute("scope", "col");
-        corner.appendChild(el("span", "sr-only", "Measurement"));
-        headRow.appendChild(corner);
-        hours.forEach(function (hour, index) {
-          var previous = index > 0 ? hours[index - 1] : null;
-          var withDay = index === 0 || !previous || previous.d !== hour.d || previous.mo !== hour.mo;
-          var th = el("th", null, formatHour(hour, withDay));
-          th.setAttribute("scope", "col");
-          headRow.appendChild(th);
-        });
-        thead.appendChild(headRow);
-        table.appendChild(thead);
-
-        function addRow(label, fill) {
-          var row = document.createElement("tr");
-          var th = el("th", null, label);
-          th.setAttribute("scope", "row");
-          row.appendChild(th);
-          hours.forEach(function (hour) {
-            var cell = document.createElement("td");
-            fill(cell, hour);
-            row.appendChild(cell);
-          });
-          return row;
-        }
-
-        var tbody = document.createElement("tbody");
-        tbody.appendChild(addRow("Wave", function (cell, hour) {
-          cell.appendChild(textOrNa(formatFeet(marine.waves[hour.key])));
-        }));
-        tbody.appendChild(addRow("Period", function (cell, hour) {
-          cell.appendChild(textOrNa(formatSeconds(periodAt(marine, hour.key))));
-        }));
-        tbody.appendChild(addRow("Wind", function (cell, hour) {
-          if (!wind) {
-            cell.appendChild(na());
-            return;
-          }
-          var phrase = windPhrase(wind.speeds[hour.key], wind.dirs[hour.key]);
-          if (!phrase) {
-            cell.appendChild(na());
-            return;
-          }
-          cell.setAttribute("aria-label", phrase.aria);
-          if (phrase.sector === "calm" || !phrase.shortDir) {
-            cell.textContent = phrase.sector === "calm" ? "Calm" : phrase.text;
-            return;
-          }
-          cell.appendChild(el("span", "hour-wind", phrase.shortSpeed));
-          cell.appendChild(el("span", "hour-dir", phrase.shortDir));
-        }));
-        table.appendChild(tbody);
-        scroller.appendChild(table);
-        block.appendChild(scroller);
-        return block;
-      }
-
-      function prevailingWind(marine, wind, dayKey) {
-        if (!wind) return null;
-        var east = 0;
-        var north = 0;
-        var speedSum = 0;
-        var count = 0;
-        marine.times.forEach(function (hour) {
-          if (hour.key.slice(0, 10) !== dayKey) return;
-          if (hour.h < 7 || hour.h > 18) return;
-          var speed = wind.speeds[hour.key];
-          var dir = wind.dirs[hour.key];
-          if (speed == null || dir == null) return;
-          var radians = dir * Math.PI / 180;
-          east += speed * Math.sin(radians);
-          north += speed * Math.cos(radians);
-          speedSum += speed;
-          count += 1;
-        });
-        if (!count) return null;
-        var degrees = Math.atan2(east, north) * 180 / Math.PI;
-        if (degrees < 0) degrees += 360;
-        return { speed: speedSum / count, dir: degrees };
-      }
-
-      function renderDayTable(spot, marine, wind, today) {
-        if (!marine || !marine.times.length) return null;
-        var days = [];
-        var seen = {};
-        marine.times.forEach(function (hour) {
-          var dayKey = hour.key.slice(0, 10);
-          if (seen[dayKey]) return;
-          seen[dayKey] = true;
-          days.push({ key: dayKey, wall: hour });
-        });
-        days = days.slice(0, 5);
-        if (!days.length) return null;
-
-        var block = el("div");
-        block.appendChild(el("p", "card-note", "Highest wave each day. Period is the swell period at that hour, or the combined wave period if swell period is missing. Wind is the average from 7:00 a.m. through 6:00 p.m. ET. On a small screen, scroll sideways to see every column."));
-        var scroller = el("div", "day-scroll");
-        scroller.tabIndex = 0;
-        scroller.setAttribute("role", "region");
-        scroller.setAttribute("aria-label", "Next 5 days at " + spot.name);
-
-        var table = document.createElement("table");
-        table.className = "day-table";
-        table.appendChild(el("caption", "sr-only", "Highest wave each day, the period at that hour, and the daytime average wind."));
-        var thead = document.createElement("thead");
-        var headRow = document.createElement("tr");
-        ["Day", "Max wave", "Period", "Wind", "Estimate"].forEach(function (label) {
-          var th = el("th", null, label);
-          th.setAttribute("scope", "col");
-          headRow.appendChild(th);
-        });
-        thead.appendChild(headRow);
-        table.appendChild(thead);
-        var tbody = document.createElement("tbody");
-
-        days.forEach(function (day) {
-          var peak = null;
-          marine.times.forEach(function (hour) {
-            if (hour.key.slice(0, 10) !== day.key) return;
-            var height = marine.waves[hour.key];
-            if (height == null) return;
-            if (!peak || height > peak.height) peak = { height: height, key: hour.key };
-          });
-          var period = peak ? periodAt(marine, peak.key) : null;
-          var windDay = prevailingWind(marine, wind, day.key);
-          var rating = peak && windDay ? rateConditions(peak.height, period, windDay.speed, windDay.dir) : null;
-          var windText = windDay ? windPhrase(windDay.speed, windDay.dir) : null;
-
-          var row = document.createElement("tr");
-          var dayCell = el("th", null, formatDay(day.wall, today));
-          dayCell.setAttribute("scope", "row");
-          row.appendChild(dayCell);
-
-          var waveCell = document.createElement("td");
-          waveCell.appendChild(textOrNa(peak ? formatFeet(peak.height) : null));
-          row.appendChild(waveCell);
-
-          var periodCell = document.createElement("td");
-          periodCell.appendChild(textOrNa(formatSeconds(period)));
-          row.appendChild(periodCell);
-
-          var windCell = document.createElement("td");
-          if (!windText) windCell.appendChild(na());
-          else {
-            windCell.textContent = windText.sector === "calm" ? "Calm" : (windText.shortSpeed + " " + windText.shortDir);
-            windCell.setAttribute("aria-label", windText.aria);
-          }
-          row.appendChild(windCell);
-
-          var rateCell = document.createElement("td");
-          rateCell.appendChild(ratingElement(rating));
-          row.appendChild(rateCell);
-          tbody.appendChild(row);
-        });
-
-        table.appendChild(tbody);
-        scroller.appendChild(table);
-        block.appendChild(scroller);
-        return block;
-      }
-
-      function renderCard(spot, marine, wind, waterF, today) {
-        var card = el("article", "condition-card");
-        card.setAttribute("aria-labelledby", spot.id + "-title");
-
-        var top = el("div", "card-top");
-        var title = el("h3", null, spot.name);
-        title.id = spot.id + "-title";
-        top.appendChild(title);
-
-        var hasWave = marine && marine.waveFt != null;
-        var period = currentPeriod(marine);
-        var rating = hasWave && wind && wind.speed != null
-          ? rateConditions(marine.waveFt, period, wind.speed, wind.dir)
-          : null;
-        var ratingWrap = el("p", "rating-wrap");
-        ratingWrap.appendChild(el("span", "rating-kicker", "Estimate"));
-        ratingWrap.appendChild(ratingElement(rating));
-        top.appendChild(ratingWrap);
-        card.appendChild(top);
-        card.appendChild(el("p", "score-line", scoreText(rating)));
-
-        if (!hasWave) {
-          card.appendChild(el("p", "card-note", "No model data for this beach right now."));
-          return card;
-        }
-
-        var hero = el("p", "wave-hero");
-        hero.appendChild(document.createTextNode(tenths(marine.waveFt).toFixed(1)));
-        hero.appendChild(el("span", null, "ft"));
-        card.appendChild(hero);
-        card.appendChild(el("p", "wave-label", "Wave height"));
-
-        var list = el("dl", "metrics");
-        appendStat(list, false, "Swell height", textOrNa(formatFeet(marine.swellFt)));
-        appendStat(list, false, marine.swellPeriod != null ? "Swell period" : "Wave period", textOrNa(formatSeconds(period)));
-        var directionText = marine.swellDir == null ? null : roundedDeg(marine.swellDir) + "° " + compassLabel(marine.swellDir);
-        appendStat(list, false, "Swell direction", textOrNa(directionText));
-        if (waterF != null) appendStat(list, false, "Water", document.createTextNode(waterF.toFixed(1) + "°F"));
-
-        var windNode;
-        if (!wind || wind.speed == null) {
-          windNode = document.createTextNode("Not available");
-        } else {
-          var phrase = windPhrase(wind.speed, wind.dir);
-          var windText = phrase.text;
-          if (wind.gust != null && roundedMph(wind.speed) !== 0) {
-            windText += ". Gusts " + roundedMph(wind.gust) + " mph.";
-          }
-          windNode = document.createTextNode(windText);
-        }
-        appendStat(list, true, "Wind", windNode);
-        card.appendChild(list);
-
-        var when = marine.time ? "Applies to " + formatWall(marine.time) + "." : "Model time was not included.";
-        if (wind && wind.time && marine.time && wind.time.key !== marine.time.key) {
-          when += " Wind applies to " + formatWall(wind.time) + ".";
-        }
-        card.appendChild(el("p", "card-note", when));
-
-        var hours = renderHourTable(spot, marine, wind);
-        if (hours) {
-          card.appendChild(el("h4", null, "Next 12 hours"));
-          card.appendChild(hours);
-        }
-        var days = renderDayTable(spot, marine, wind, today);
-        if (days) {
-          card.appendChild(el("h4", null, "Next 5 days"));
-          card.appendChild(days);
-        }
-        return card;
-      }
-
-      function showError() {
-        statusEl.textContent = "Couldn't load conditions right now.";
-        statusEl.classList.add("is-error");
-        statusEl.setAttribute("aria-busy", "false");
-        rootEl.replaceChildren();
-      }
-
-      function fetchJson(url) {
-        return fetch(url, { cache: "no-store", signal: AbortSignal.timeout(15000) }).then(function (response) {
-          if (!response.ok) throw new Error("Request failed");
-          return response.json();
-        }).then(function (data) {
-          if (data && data.error) throw new Error(data.reason || "Request failed");
-          return data;
-        });
-      }
-
-      function marineUrl(params) {
-        var lats = SPOTS.map(function (spot) { return spot.lat; }).join(",");
-        var lons = SPOTS.map(function (spot) { return spot.lon; }).join(",");
-        var query = new URLSearchParams();
-        query.set("latitude", lats);
-        query.set("longitude", lons);
-        Object.keys(params).forEach(function (key) { query.set(key, params[key]); });
-        return "https://marine-api.open-meteo.com/v1/marine?" + query.toString();
-      }
-
-      function windUrl() {
-        var query = new URLSearchParams();
-        query.set("latitude", SPOTS.map(function (spot) { return spot.lat; }).join(","));
-        query.set("longitude", SPOTS.map(function (spot) { return spot.lon; }).join(","));
-        query.set("current", "wind_speed_10m,wind_direction_10m,wind_gusts_10m");
-        query.set("hourly", "wind_speed_10m,wind_direction_10m");
-        query.set("wind_speed_unit", "mph");
-        query.set("timezone", "America/New_York");
-        query.set("forecast_days", "5");
-        return "https://api.open-meteo.com/v1/forecast?" + query.toString();
-      }
-
-      function tideUrl(today) {
-        var end = addDays(today, 2);
-        var query = new URLSearchParams();
-        query.set("begin_date", ymdCompact(today));
-        query.set("end_date", ymdCompact(end));
-        query.set("station", "8721604");
-        query.set("product", "predictions");
-        query.set("datum", "MLLW");
-        query.set("time_zone", "lst_ldt");
-        query.set("interval", "hilo");
-        query.set("units", "english");
-        query.set("format", "json");
-        query.set("application", "satellite-beach-surf-guide");
-        return "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?" + query.toString();
-      }
-
-      function renderTides(data, now) {
-        var predictions = data && data.predictions;
-        if (!Array.isArray(predictions)) return;
-        var nextHigh = null;
-        var nextLow = null;
-        predictions.forEach(function (item) {
-          var wall = parseWall(item.t);
-          var height = num(item.v);
-          if (!wall || height == null) return;
-          if (stamp(wall) < stamp(now)) return;
-          if (item.type === "H" && (!nextHigh || stamp(wall) < stamp(nextHigh.wall))) nextHigh = { wall: wall, height: height };
-          if (item.type === "L" && (!nextLow || stamp(wall) < stamp(nextLow.wall))) nextLow = { wall: wall, height: height };
-        });
-        if (!nextHigh && !nextLow) return;
-        tideEl.replaceChildren();
-        tideEl.appendChild(document.createTextNode("Next predicted tides at Port Canaveral (Trident Pier), datum MLLW: "));
-        function appendTide(kind, tide) {
-          if (!tide) {
-            tideEl.appendChild(document.createTextNode(kind + " n/a"));
-            return;
-          }
-          tideEl.appendChild(document.createTextNode(kind + " " + tide.height.toFixed(1) + " ft at " + formatWall(tide.wall)));
-        }
-        appendTide("high", nextHigh);
-        tideEl.appendChild(document.createTextNode(". "));
-        appendTide("low", nextLow);
-        tideEl.appendChild(document.createTextNode(". This station is not the beach."));
-      }
-
-      function load() {
-        var today = easternNow(new Date());
-        var marinePromise = fetchJson(marineUrl({
-          current: "wave_height,swell_wave_height,swell_wave_period,swell_wave_direction,wave_period",
-          hourly: "wave_height,swell_wave_height,swell_wave_period,swell_wave_direction,wave_period",
-          length_unit: "imperial",
-          timezone: "America/New_York",
-          forecast_days: "5",
-          models: "ncep_gfswave016",
-          cell_selection: "sea"
-        }));
-        var windPromise = fetchJson(windUrl());
-        var waterPromise = fetchJson(marineUrl({
-          current: "sea_surface_temperature",
-          timezone: "America/New_York",
-          forecast_days: "1",
-          cell_selection: "sea"
-        }));
-        var tidePromise = fetchJson(tideUrl(today));
-
-        Promise.allSettled([marinePromise, windPromise, waterPromise, tidePromise]).then(function (results) {
-          if (results[3].status === "fulfilled") {
-            try { renderTides(results[3].value, today); } catch (error) { tideEl.replaceChildren(); }
-          }
-
-          if (results[0].status !== "fulfilled") {
-            showError();
-            return;
-          }
-          var marineBlocks = locationList(results[0].value);
-          if (!marineBlocks || marineBlocks.length !== SPOTS.length) {
-            showError();
-            return;
-          }
-          var windBlocks = results[1].status === "fulfilled" ? locationList(results[1].value) : null;
-          if (!windBlocks || windBlocks.length !== SPOTS.length) windBlocks = null;
-          var waterBlocks = results[2].status === "fulfilled" ? locationList(results[2].value) : null;
-          if (!waterBlocks || waterBlocks.length !== SPOTS.length) waterBlocks = null;
-
-          rootEl.replaceChildren();
-          SPOTS.forEach(function (spot, index) {
-            var marine = null;
-            var wind = null;
-            var water = null;
-            try { marine = buildMarine(marineBlocks[index]); } catch (error) { marine = null; }
-            if (windBlocks) {
-              try { wind = buildWind(windBlocks[index]); } catch (error) { wind = null; }
-            }
-            if (waterBlocks) {
-              var waterUnits = unitsOf(waterBlocks[index]);
-              var waterCurrent = waterBlocks[index].current || {};
-              water = waterFahrenheit(waterCurrent.sea_surface_temperature, waterUnits.sea_surface_temperature);
-            }
-            rootEl.appendChild(renderCard(spot, marine, wind, water, today));
-          });
-          statusEl.textContent = "Live conditions updated for Satellite Beach, Cocoa Beach, and Melbourne Beach.";
-          statusEl.classList.remove("is-error");
-          statusEl.setAttribute("aria-busy", "false");
-        }).catch(function () {
-          showError();
-        });
-      }
-
-      load();
-    })();
-  </script>
+  <script src="scoring/surf-score.js"></script>
+  <script src="scoring/conditions.js"></script>
 </body>
 </html>
