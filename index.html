@@ -13,19 +13,28 @@
   <script>
     document.documentElement.classList.add("js");
     if (window.scrollY <= 24) document.documentElement.classList.add("nav-over-hero");
-    /* Hero swap — edit these two paths only.
-       video prefix: {video}.webm, {video}.mp4, and on small screens
-       {video}-mobile.webm, {video}-mobile.mp4.
-       poster prefix: {poster}.webp and {poster}.jpg (the LCP still).
-       Default is generated artwork: a night run-in with a beach fire.
-       It is not a photograph and not Satellite Beach.
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      document.documentElement.classList.add("reduced-motion");
+    }
+    /* Hero swap. video and ambient are prefixes:
+       {name}.webm, {name}.mp4, {name}-mobile.webm, {name}-mobile.mp4.
+       poster and endPoster are prefixes: .webp and .jpg.
+       poster is still A (autoplay LCP). endPoster is the aerial closer
+       (reduced motion, save-data, low battery).
+       The full cut plays once. ambient is the 5s aerial loop after it.
+       headlineOut and lockupAt are seconds on the full cut, not page time.
+       Generated artwork, not a photograph and not Satellite Beach.
        Unused still, not wired: assets/video/hero-still-b.jpg
        Documented alternates (Pexels License), not shipped:
          Sandro Giambruno — https://www.pexels.com/video/people-doing-surfing-together-6179548/
          Ron Lach — https://www.pexels.com/video/man-and-women-running-in-the-beach-10495030/ */
     window.SURF_HERO = {
       video: "assets/video/hero",
-      poster: "assets/video/hero-poster"
+      ambient: "assets/video/hero-ambient",
+      poster: "assets/video/hero-poster",
+      endPoster: "assets/video/hero-end",
+      headlineOut: 14,
+      lockupAt: 20
     };
   </script>
   <style>
@@ -1671,12 +1680,147 @@
       border-top: 1px solid rgba(180, 74, 20, 0.45);
     }
 
-    @media (max-width: 767px) {
-      .hero { aspect-ratio: auto; min-height: 100svh; }
+    :root { --nav-height: 4rem; }
 
+    .hero-lockup {
+      position: absolute;
+      left: 50%;
+      top: calc(var(--nav-height, 4rem) + clamp(1.5rem, 4vh, 3rem));
+      z-index: 4;
+      width: min(92vw, 40rem);
+      transform: translateX(-50%);
+      text-align: center;
+      pointer-events: none;
+      opacity: 0;
+    }
+
+    .hero.is-playing .hero-lockup {
+      transition: opacity 1200ms var(--ease-out);
+    }
+
+    .hero-lockup.is-in { opacity: 1; }
+
+    .hero-lockup .wordmark {
+      margin: 0;
+      color: var(--color-foam);
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: clamp(2.25rem, 1.1rem + 3.2vw, 4.5rem);
+      font-optical-sizing: auto;
+      letter-spacing: 0.06em;
+      line-height: 1.05;
+    }
+
+    .hero-lockup .rule {
+      width: 52%;
+      height: 2px;
+      margin: 0.7em auto 0.55em;
+      background: var(--color-flame);
+    }
+
+    .hero-lockup .sub {
+      margin: 0;
+      color: var(--color-sand);
+      font-family: var(--font-body);
+      font-weight: 600;
+      font-size: clamp(0.7rem, 0.55rem + 0.35vw, 0.95rem);
+      letter-spacing: 0.28em;
+      line-height: 1.4;
+      text-transform: uppercase;
+    }
+
+    .hero.is-playing .hero-title,
+    .hero.is-playing .hero-dek {
+      transition: opacity 700ms var(--ease-out);
+    }
+
+    .hero.is-story-out .hero-title,
+    .hero.is-story-out .hero-dek,
+    .reduced-motion .hero-title,
+    .reduced-motion .hero-dek,
+    .hero.is-resolved .hero-title,
+    .hero.is-resolved .hero-dek {
+      opacity: 0;
+    }
+
+    .site-header.is-lockup .brand,
+    .reduced-motion .brand,
+    .hero-settled .brand {
+      opacity: 0;
+    }
+
+    .hero-settled .hero-lockup { opacity: 1; }
+
+    .hero-settled .hero-title,
+    .hero-settled .hero-dek { opacity: 0; }
+
+    .hero.is-story-out .hero-overlay,
+    .reduced-motion .hero-overlay,
+    .hero-settled .hero-overlay {
+      background: linear-gradient(180deg, rgba(3, 20, 28, 0.34) 0%, rgba(3, 20, 28, 0.08) 28%, rgba(3, 20, 28, 0) 42%);
+    }
+
+    @media (max-width: 767px) {
+      .hero {
+        aspect-ratio: 4 / 5;
+        min-height: 0;
+        padding-top: calc(var(--nav-height, 4rem) + 8px);
+        padding-bottom: 4.75rem;
+      }
+
+      .hero-content { gap: 12px; }
+
+      .hero-divider { height: 40px; }
+
+      /* Production aerial is wider than the review plate. 38% holds the
+         fire in the lower left and the near paddlers on the right. */
       .hero-still img,
       .hero-fallback,
-      .hero-video { object-position: 28% 50%; }
+      .hero-video { object-position: 38% 50%; }
+
+      .hero.is-story-out .hero-title,
+      .hero.is-story-out .hero-dek,
+      .reduced-motion .hero-title,
+      .reduced-motion .hero-dek,
+      .hero-settled .hero-title,
+      .hero-settled .hero-dek {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        margin: -1px;
+        padding: 0;
+        overflow: hidden;
+        clip: rect(0 0 0 0);
+        white-space: nowrap;
+      }
+
+      .hero.is-story-out .hero-content,
+      .reduced-motion .hero .hero-content,
+      .hero-settled .hero .hero-content {
+        margin-top: 6.75rem;
+      }
+
+      .hero.is-story-out .hero-credit,
+      .reduced-motion .hero-credit,
+      .hero-settled .hero-credit {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0 0 0 0);
+      }
+
+      .hero.is-story-out .hero-actions,
+      .reduced-motion .hero-actions,
+      .hero-settled .hero-actions {
+        width: 11.5rem;
+        align-self: flex-start;
+      }
+
+      .hero-lockup {
+        top: calc(var(--nav-height, 4rem) + env(safe-area-inset-top, 0px) + var(--space-4));
+      }
 
       .js .site-nav {
         background: var(--color-night-ocean);
@@ -1689,7 +1833,9 @@
         right: auto;
         bottom: auto;
         width: auto;
-        margin-top: var(--space-3);
+        max-width: 100%;
+        margin-top: 0;
+        font-size: 0.8125rem;
         text-align: left;
       }
     }
@@ -1714,6 +1860,10 @@
 
     @media (prefers-reduced-motion: reduce) {
       .hero-video { display: none !important; }
+      .hero-lockup { opacity: 1; transition: none; }
+      .hero-title,
+      .hero-dek,
+      .brand { transition: none; }
     }
 
   </style>
@@ -1751,7 +1901,7 @@
           <source id="hero-poster-webp" type="image/webp">
           <img id="hero-poster" alt="Generated artwork of a group with surfboards running into the ocean at night, a beach fire burning on the sand. Not a photograph of Satellite Beach." width="1600" height="900" fetchpriority="high" decoding="async">
         </picture>
-        <video id="hero-video" class="hero-video" muted playsinline loop preload="none" aria-hidden="true"></video>
+        <video id="hero-video" class="hero-video" muted playsinline preload="none" aria-hidden="true"></video>
         <div class="hero-grain" aria-hidden="true"></div>
         <div class="hero-overlay" aria-hidden="true"></div>
         <noscript><img class="hero-fallback" src="assets/video/hero-poster.jpg" alt="Generated artwork of a group with surfboards running into the ocean at night, a beach fire burning on the sand. Not a photograph of Satellite Beach." width="1600" height="900"></noscript>
@@ -1760,20 +1910,33 @@
         (function () {
           var cfg = window.SURF_HERO;
           if (!cfg) return;
+          var reduce = document.documentElement.classList.contains("reduced-motion");
+          var saveData = !!(navigator.connection && navigator.connection.saveData);
+          var settled = reduce || saveData;
+          var base = settled ? cfg.endPoster : cfg.poster;
           var webp = document.getElementById("hero-poster-webp");
           var img = document.getElementById("hero-poster");
-          if (webp) webp.srcset = cfg.poster + ".webp";
-          if (img) img.src = cfg.poster + ".jpg";
+          if (webp) webp.srcset = base + ".webp";
+          if (img) {
+            img.src = base + ".jpg";
+            if (settled) img.alt = "Generated artwork, seen from above: a beach fire on the sand and a small group paddling out at dusk. Not a photograph of Satellite Beach.";
+          }
+          if (settled) document.documentElement.classList.add("hero-settled");
         })();
       </script>
+      <div class="hero-lockup" id="hero-lockup" aria-hidden="true">
+        <p class="wordmark">Satellite Beach</p>
+        <div class="rule"></div>
+        <p class="sub">Surf Guide</p>
+      </div>
       <div class="wrap hero-content">
-        <h1 id="hero-title">The paddle-out is the point.</h1>
+        <h1 class="hero-title" id="hero-title">The paddle-out is the point.</h1>
         <p class="hero-dek">We read the tide, the wind, and the swell. You go in with your people.</p>
         <div class="hero-actions">
           <a class="btn btn-primary" href="#conditions">Check conditions</a>
           <a class="btn btn-secondary" href="#spots">Explore spots</a>
         </div>
-        <p class="hero-credit">Artwork: generated. A group with boards running into the ocean at night, a beach fire on the sand. Not a photograph, and not Satellite Beach.</p>
+        <p class="hero-credit">Artwork: generated. A night run-in, a paddle-out, and a drone rise over a beach fire. Not a photograph, and not Satellite Beach.</p>
       </div>
       <svg class="hero-divider" viewBox="0 0 1440 90" preserveAspectRatio="none" aria-hidden="true" focusable="false">
         <path fill="currentColor" d="M0 46C220 86 420 8 700 40C980 72 1180 14 1440 48V90H0Z"/>
@@ -1975,7 +2138,7 @@
   <footer class="site-footer">
     <div class="wrap site-footer-inner">
       <p>Satellite Beach Surf Guide &bull; Built and evolved by a Grok Bot team</p>
-      <p class="photo-credits">Hero: generated artwork of a night run-in with a beach fire. Not a photograph, and not Satellite Beach. Photography: <a href="https://unsplash.com/photos/B7nsKUoqHu8">Sky Gallian</a>, <a href="https://unsplash.com/photos/Xv8ogjmM8Ew">Matt Benson</a> (Cocoa Beach boardwalk), <a href="https://unsplash.com/photos/NLJsTmQsaRk">Florian Schneider</a> via <a href="https://unsplash.com/license">Unsplash</a>. <a href="https://www.pexels.com/photo/woman-surfing-at-sunrise-on-melbourne-beach-in-florida-32168032/">Koen Swiers</a> via <a href="https://www.pexels.com/license/">Pexels</a>: <a href="https://www.pexels.com/photo/woman-surfing-at-sunrise-on-melbourne-beach-in-florida-32168032/">Melbourne Beach</a>, <a href="https://www.pexels.com/photo/surfing-adventure-in-cocoa-beach-florida-32168077/">Cocoa Beach wave</a>, <a href="https://www.pexels.com/photo/surfer-at-sunset-on-melbourne-beach-31803640/">Melbourne Beach sunset</a>. <a href="https://www.pexels.com/photo/a-topless-man-wearing-silver-necklace-13694334/">Murillo Molissani</a> via Pexels.</p>
+      <p class="photo-credits">Hero: generated artwork of a night run-in, a paddle-out, and a drone rise over a beach fire. Not a photograph, and not Satellite Beach. Photography: <a href="https://unsplash.com/photos/B7nsKUoqHu8">Sky Gallian</a>, <a href="https://unsplash.com/photos/Xv8ogjmM8Ew">Matt Benson</a> (Cocoa Beach boardwalk), <a href="https://unsplash.com/photos/NLJsTmQsaRk">Florian Schneider</a> via <a href="https://unsplash.com/license">Unsplash</a>. <a href="https://www.pexels.com/photo/woman-surfing-at-sunrise-on-melbourne-beach-in-florida-32168032/">Koen Swiers</a> via <a href="https://www.pexels.com/license/">Pexels</a>: <a href="https://www.pexels.com/photo/woman-surfing-at-sunrise-on-melbourne-beach-in-florida-32168032/">Melbourne Beach</a>, <a href="https://www.pexels.com/photo/surfing-adventure-in-cocoa-beach-florida-32168077/">Cocoa Beach wave</a>, <a href="https://www.pexels.com/photo/surfer-at-sunset-on-melbourne-beach-31803640/">Melbourne Beach sunset</a>. <a href="https://www.pexels.com/photo/a-topless-man-wearing-silver-necklace-13694334/">Murillo Molissani</a> via Pexels.</p>
     </div>
   </footer>
 
@@ -2922,44 +3085,71 @@
       var cfg = window.SURF_HERO;
       var video = document.getElementById("hero-video");
       var scene = document.getElementById("hero-scene");
-      if (!cfg || !video || !scene) return;
+      var hero = document.querySelector(".hero");
+      var lockup = document.getElementById("hero-lockup");
+      var header = document.querySelector("[data-header]");
+      var poster = document.getElementById("hero-poster");
+      if (!cfg || !video || !scene || !hero || !lockup) return;
 
-      var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      var reduce = document.documentElement.classList.contains("reduced-motion");
       if (reduce) {
         video.remove();
         return;
       }
 
-      var saveData = !!(navigator.connection && navigator.connection.saveData);
+      var phase = "story";
       var mode = "auto";
       var started = false;
       var seen = false;
+      var root = document.documentElement;
 
-      function mountSources() {
+      function fileUrl(prefix) {
+        var mobile = window.matchMedia("(max-width: 767px)").matches;
+        var webm = video.canPlayType("video/webm; codecs=\"vp9\"") || video.canPlayType("video/webm");
+        if (mobile) return prefix + (webm ? "-mobile.webm" : "-mobile.mp4");
+        return prefix + (webm ? ".webm" : ".mp4");
+      }
+
+      function showSettled() {
+        root.classList.add("hero-settled");
+        if (poster && cfg.endPoster) {
+          poster.src = cfg.endPoster + ".jpg";
+          poster.alt = "Generated artwork, seen from above: a beach fire on the sand and a small group paddling out at dusk. Not a photograph of Satellite Beach.";
+          var webp = document.getElementById("hero-poster-webp");
+          if (webp) webp.srcset = cfg.endPoster + ".webp";
+        }
+      }
+
+      function clearSettled() {
+        root.classList.remove("hero-settled");
+        hero.classList.remove("is-story-out");
+        lockup.classList.remove("is-in");
+        if (header) header.classList.remove("is-lockup");
+        if (poster && cfg.poster) {
+          poster.src = cfg.poster + ".jpg";
+          poster.alt = "Generated artwork of a group with surfboards running into the ocean at night, a beach fire burning on the sand. Not a photograph of Satellite Beach.";
+          var webp = document.getElementById("hero-poster-webp");
+          if (webp) webp.srcset = cfg.poster + ".webp";
+        }
+      }
+
+      function mountStory() {
         if (video.dataset.mounted === "1") return;
         video.dataset.mounted = "1";
-        var mobile = window.matchMedia("(max-width: 767px)").matches;
-        var files = mobile
-          ? [["-mobile.webm", "video/webm"], ["-mobile.mp4", "video/mp4"], [".webm", "video/webm"], [".mp4", "video/mp4"]]
-          : [[".webm", "video/webm"], [".mp4", "video/mp4"]];
-        files.forEach(function (pair) {
-          var source = document.createElement("source");
-          source.src = cfg.video + pair[0];
-          source.type = pair[1];
-          video.appendChild(source);
-        });
-        video.poster = cfg.poster + ".jpg";
+        video.loop = false;
         video.muted = true;
         video.defaultMuted = true;
         video.playsInline = true;
         video.setAttribute("playsinline", "");
-        video.preload = "none";
-        video.load();
+        video.preload = "auto";
+        video.poster = cfg.poster + ".jpg";
+        video.src = fileUrl(cfg.video);
       }
 
       function showTap() {
         if (document.getElementById("hero-play")) return;
         mode = "tap";
+        showSettled();
         var btn = document.createElement("button");
         btn.id = "hero-play";
         btn.type = "button";
@@ -2970,21 +3160,50 @@
         btn.addEventListener("click", function () {
           mode = "auto";
           btn.hidden = true;
+          clearSettled();
           tryPlay();
         });
       }
 
+      function showLockup() {
+        if (lockup.classList.contains("is-in")) return;
+        lockup.classList.add("is-in");
+        if (header) header.classList.add("is-lockup");
+      }
+
+      function onTime() {
+        if (phase !== "story") return;
+        var t = video.currentTime || 0;
+        if (t >= cfg.headlineOut) hero.classList.add("is-story-out");
+        if (t >= cfg.lockupAt) showLockup();
+      }
+
+      function playAmbient() {
+        phase = "ambient";
+        showLockup();
+        hero.classList.add("is-story-out");
+        video.loop = true;
+        video.src = fileUrl(cfg.ambient);
+        var pending = video.play();
+        if (pending && pending.catch) pending.catch(function () {});
+      }
+
       function tryPlay() {
-        mountSources();
-        video.preload = "auto";
+        mountStory();
+        hero.classList.add("is-playing");
         var pending = video.play();
         if (pending && pending.then) {
           pending.then(function () { started = true; }).catch(function () { showTap(); });
         }
       }
 
+      video.addEventListener("timeupdate", onTime);
+      video.addEventListener("ended", function () {
+        if (phase === "story") playAmbient();
+      });
       video.addEventListener("playing", function () {
         video.classList.add("is-playing");
+        hero.classList.add("is-playing");
         started = true;
       });
 
@@ -3008,8 +3227,12 @@
         }, { threshold: 0.2 });
         io.observe(scene);
         document.addEventListener("visibilitychange", function () {
-          if (document.hidden) video.pause();
-          else if (seen && (mode === "auto" || started)) tryPlay();
+          if (document.hidden) {
+            if (!video.paused) video.pause();
+          } else if (seen && (mode === "auto" || started)) {
+            var pending = video.play();
+            if (pending && pending.catch) pending.catch(function () {});
+          }
         });
       }
 
@@ -3022,7 +3245,7 @@
         watch();
       }
 
-      if (saveData) {
+      if (root.classList.contains("hero-settled")) {
         begin(false);
         return;
       }
