@@ -12,6 +12,12 @@
   <script>
     document.documentElement.classList.add("js");
     if (window.scrollY <= 24) document.documentElement.classList.add("nav-over-hero");
+    /* js-motion hides .reveal until the bottom script marks them .is-in.
+       Reduced motion and browsers without IntersectionObserver never get the class,
+       so sections, cards, and the wave number stay fully visible and still. */
+    if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches && "IntersectionObserver" in window) {
+      document.documentElement.classList.add("js-motion");
+    }
   </script>
   <style>
     /* Visual Direction v1. Tokens first, then components.
@@ -34,6 +40,13 @@
          waist high 1.5–3 ft
          chest high 3–4.5 ft
          head high  > 4.5 ft
+
+       Motion (no libraries):
+       Wave dividers slide on transform only. Scroll reveals use opacity and
+       transform, and only under html.js-motion. Hover travel uses the translate
+       property so it does not fight the reveal transform.
+       prefers-reduced-motion: reduce — html.js-motion is not set, wave and hero
+       animations are none, hover does not travel, and the wave number is not counted.
     */
     :root {
       --color-ocean: #072A40;
@@ -410,11 +423,37 @@
       left: 0;
       right: 0;
       bottom: -1px;
-      width: 100%;
       height: var(--space-10);
+      overflow: hidden;
       color: var(--color-foam);
       pointer-events: none;
     }
+
+    .hero-divider-svg,
+    .wave-divider-svg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 200%;
+      max-width: none;
+      height: 100%;
+    }
+
+    /* Fixed height, negative margin: the divider occupies the padding
+       already on each band, so the slide does not add page height. */
+    .wave-divider {
+      position: relative;
+      z-index: 2;
+      height: 64px;
+      margin-block: -32px;
+      overflow: hidden;
+      color: var(--color-sea-glass);
+      pointer-events: none;
+    }
+
+    .wave-line-warm { color: var(--color-sunrise); opacity: 0.5; }
+
+    .wave-line-glass { color: var(--color-sea-glass); opacity: 0.8; }
 
     /* Spots */
     .spot-list {
@@ -443,8 +482,23 @@
     }
 
     .spot-card:hover,
-    .spot-card:focus-within {
+    .spot-card:focus-within,
+    .story-card:hover,
+    .story-card:focus-within,
+    .condition-card:hover,
+    .condition-card:focus-within,
+    .conditions-card:hover,
+    .conditions-card:focus-within {
+      border-color: rgba(47, 122, 118, 0.45);
       box-shadow: var(--shadow-lift);
+    }
+
+    .spot-card:focus-within,
+    .story-card:focus-within,
+    .condition-card:focus-within,
+    .conditions-card:focus-within {
+      outline: 2px solid var(--color-sunrise);
+      outline-offset: 3px;
     }
 
     .spot-media {
@@ -551,6 +605,16 @@
 
     .break-link:hover,
     .break-link:focus-visible { text-decoration: underline; }
+
+    .break-link::after {
+      content: "";
+      width: 0.45em;
+      height: 0.45em;
+      margin-left: 0.45em;
+      border-right: 2px solid currentColor;
+      border-bottom: 2px solid currentColor;
+      transform: translateY(-0.05em) rotate(-45deg);
+    }
 
     .note {
       max-width: 40rem;
@@ -904,33 +968,98 @@
       .nav-toggle,
       .drawer-close,
       .spot-card,
-      .conditions-card {
+      .story-card,
+      .condition-card,
+      .conditions-card,
+      .break-link::after,
+      .wave-glyph {
         transition:
           background-color var(--dur-fast) var(--ease-out),
           color var(--dur-fast) var(--ease-out),
           border-color var(--dur-fast) var(--ease-out),
           box-shadow var(--dur-fast) var(--ease-out),
-          transform var(--dur-fast) var(--ease-out);
+          translate var(--dur-fast) var(--ease-out);
       }
 
       .spot-card:hover,
       .spot-card:focus-within,
-      .conditions-card:hover {
-        transform: translateY(-2px);
+      .story-card:hover,
+      .story-card:focus-within,
+      .condition-card:hover,
+      .condition-card:focus-within,
+      .conditions-card:hover,
+      .conditions-card:focus-within,
+      .spot-card:hover .wave-glyph,
+      .spot-card:focus-within .wave-glyph {
+        translate: 0 -4px;
       }
 
-      .hero-drift {
-        animation: wave-drift 18s var(--ease-out) infinite alternate;
+      .btn:hover,
+      .btn:focus-visible { translate: 0 -2px; }
+
+      .break-link:hover::after,
+      .break-link:focus-visible::after { translate: 0.15em 0; }
+
+      .btn:active { translate: 0 0; }
+
+      .hero-content { animation: rise-in 900ms var(--ease-out) both; }
+
+      .hero-drift { animation: wave-drift 18s var(--ease-out) infinite alternate; }
+
+      .hero-divider-svg { animation: wave-slide 36s linear infinite; }
+
+      .wave-divider-svg { animation: wave-slide 28s linear infinite; }
+
+      .wave-divider-reverse .wave-divider-svg {
+        animation-duration: 34s;
+        animation-direction: reverse;
       }
 
-      .skeleton {
-        animation: skeleton-pulse 1.6s var(--ease-out) infinite;
+      .wave-divider-slow .wave-divider-svg { animation-duration: 42s; }
+
+      .skeleton { animation: skeleton-pulse 1.6s var(--ease-out) infinite; }
+
+      /* Hidden only after html.js-motion. In-view items get .is-in before first paint.
+         Transform and opacity reserve layout, so the rise does not shift the page. */
+      .js-motion .reveal {
+        opacity: 0;
+        transform: translate3d(0, 12px, 0);
+        transition:
+          opacity 640ms var(--ease-out),
+          transform 640ms var(--ease-out),
+          translate var(--dur-fast) var(--ease-out),
+          box-shadow var(--dur-fast) var(--ease-out),
+          border-color var(--dur-fast) var(--ease-out);
       }
+
+      .js-motion .reveal.is-in {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+      }
+
+      .js-motion .story-card.reveal,
+      .js-motion .note.reveal,
+      .js-motion .conditions-lead.reveal { transition-delay: 70ms, 70ms, 0s, 0s, 0s; }
+
+      .js-motion .spot-list > .reveal:nth-child(2) { transition-delay: 80ms, 80ms, 0s, 0s, 0s; }
+      .js-motion .spot-list > .reveal:nth-child(3) { transition-delay: 160ms, 160ms, 0s, 0s, 0s; }
+      .js-motion #conditions-root > .reveal:nth-child(2) { transition-delay: 90ms, 90ms, 0s, 0s, 0s; }
+      .js-motion #conditions-root > .reveal:nth-child(3) { transition-delay: 180ms, 180ms, 0s, 0s, 0s; }
     }
 
     @keyframes wave-drift {
       from { transform: translateX(0); }
       to { transform: translateX(-4px); }
+    }
+
+    @keyframes wave-slide {
+      from { transform: translate3d(0, 0, 0); }
+      to { transform: translate3d(-50%, 0, 0); }
+    }
+
+    @keyframes rise-in {
+      from { opacity: 0; transform: translate3d(0, 12px, 0); }
+      to { opacity: 1; transform: translate3d(0, 0, 0); }
     }
 
     @keyframes skeleton-pulse {
@@ -946,6 +1075,32 @@
         animation-iteration-count: 1 !important;
         transition-duration: 0.01ms !important;
         scroll-behavior: auto !important;
+      }
+
+      .hero-content,
+      .hero-drift,
+      .hero-divider-svg,
+      .wave-divider-svg,
+      .skeleton {
+        animation: none !important;
+      }
+
+      .reveal {
+        opacity: 1 !important;
+        transform: none !important;
+      }
+    }
+
+    @media print {
+      .hero-content,
+      .hero-drift,
+      .hero-divider-svg,
+      .wave-divider-svg,
+      .skeleton { animation: none !important; }
+
+      .reveal {
+        opacity: 1 !important;
+        transform: none !important;
       }
     }
 
@@ -1048,6 +1203,7 @@
     .rating-poor { background: var(--color-poor); color: var(--color-foam); }
     .rating-na { background: var(--color-sand); color: var(--color-muted); }
     .wave-hero {
+      position: relative;
       margin: var(--space-2) 0 0;
       color: var(--color-ink);
       font-family: var(--font-display);
@@ -1056,13 +1212,28 @@
       font-variation-settings: "opsz" 144;
       line-height: 1.05;
       letter-spacing: -0.03em;
+      font-variant-numeric: tabular-nums;
     }
-    .wave-hero span {
+    .wave-hero > span:last-child {
       margin-left: var(--space-1);
       font-family: var(--font-body);
       font-size: var(--fs-h3);
       font-weight: 600;
       letter-spacing: 0;
+    }
+    .wave-count {
+      display: inline-block;
+      margin: 0;
+      font-family: inherit;
+      font-size: inherit;
+      font-weight: inherit;
+      font-variation-settings: inherit;
+      letter-spacing: inherit;
+      line-height: inherit;
+      font-variant-numeric: tabular-nums;
+      text-align: left;
+      white-space: nowrap;
+      vertical-align: baseline;
     }
     .metrics {
       display: grid;
@@ -1172,9 +1343,6 @@
     @media (min-width: 768px) {
       .condition-card { padding: var(--space-4); }
     }
-    @media (prefers-reduced-motion: no-preference) {
-      .condition-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-lift); }
-    }
 
   </style>
 </head>
@@ -1235,14 +1403,16 @@
           <a class="btn btn-secondary" href="#spots">Explore spots</a>
         </div>
       </div>
-      <svg class="hero-divider" viewBox="0 0 1440 90" preserveAspectRatio="none" aria-hidden="true" focusable="false">
-        <path fill="currentColor" d="M0 46C220 86 420 8 700 40C980 72 1180 14 1440 48V90H0Z"/>
-      </svg>
+      <div class="hero-divider" aria-hidden="true">
+        <svg class="hero-divider-svg" viewBox="0 0 2880 90" preserveAspectRatio="none" focusable="false">
+          <path fill="currentColor" d="M0 52 Q180 0 360 52 T720 52 T1080 52 T1440 52 T1800 52 T2160 52 T2520 52 T2880 52 V90 H0 Z"/>
+        </svg>
+      </div>
     </section>
 
-    <section class="band reveal" id="spots" aria-labelledby="spots-title">
+    <section class="band" id="spots" aria-labelledby="spots-title">
       <div class="wrap stack">
-        <h2 class="section-title" id="spots-title">Featured Surf Spots</h2>
+        <h2 class="section-title reveal" id="spots-title">Featured Surf Spots</h2>
         <div class="spot-list">
           <article class="spot-card reveal" id="spot-satellite-beach" aria-labelledby="spot-satellite-beach-title">
             <div class="spot-media" aria-hidden="true">
@@ -1328,29 +1498,43 @@
             </div>
           </article>
         </div>
-        <p class="note">This is a starting scaffold. The multi-agent team will expand spots, add photos, tide info, and more over the coming days.</p>
+        <p class="note reveal">This is a starting scaffold. The multi-agent team will expand spots, add photos, tide info, and more over the coming days.</p>
       </div>
     </section>
 
-    <section class="band reveal" id="culture" aria-labelledby="culture-title">
+    <div class="wave-divider" aria-hidden="true">
+      <svg class="wave-divider-svg" viewBox="0 0 2880 80" preserveAspectRatio="none" focusable="false">
+        <path class="wave-line wave-line-warm" vector-effect="non-scaling-stroke" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" d="M0 28 Q180 6 360 28 T720 28 T1080 28 T1440 28 T1800 28 T2160 28 T2520 28 T2880 28"/>
+        <path class="wave-line wave-line-glass" vector-effect="non-scaling-stroke" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M0 52 Q180 30 360 52 T720 52 T1080 52 T1440 52 T1800 52 T2160 52 T2520 52 T2880 52"/>
+      </svg>
+    </div>
+
+    <section class="band" id="culture" aria-labelledby="culture-title">
       <div class="wrap stack">
-        <h2 class="section-title" id="culture-title">Surfing Culture</h2>
-        <div class="story-card">
+        <h2 class="section-title reveal" id="culture-title">Surfing Culture</h2>
+        <div class="story-card reveal">
           <p>From the Space Coast's unique blend of rocket launches and perfect waves to the tight-knit local crews, the area has a distinctive surf identity. Expect more stories, history, and local insights as the site grows.</p>
         </div>
       </div>
     </section>
 
-    <section class="band reveal" id="conditions" aria-labelledby="conditions-title">
+    <div class="wave-divider wave-divider-reverse" aria-hidden="true">
+      <svg class="wave-divider-svg" viewBox="0 0 2880 80" preserveAspectRatio="none" focusable="false">
+        <path class="wave-line wave-line-warm" vector-effect="non-scaling-stroke" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" d="M0 28 Q180 6 360 28 T720 28 T1080 28 T1440 28 T1800 28 T2160 28 T2520 28 T2880 28"/>
+        <path class="wave-line wave-line-glass" vector-effect="non-scaling-stroke" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M0 52 Q180 30 360 52 T720 52 T1080 52 T1440 52 T1800 52 T2160 52 T2520 52 T2880 52"/>
+      </svg>
+    </div>
+
+    <section class="band" id="conditions" aria-labelledby="conditions-title">
       <div class="wrap stack">
-        <h2 class="section-title" id="conditions-title">Conditions &amp; Forecasts</h2>
-      <p class="conditions-lead">Near-term wave, swell, and wind estimates for Satellite Beach, Cocoa Beach, and Melbourne Beach.</p>
-      <p id="conditions-status" class="conditions-status" role="status" aria-live="polite" aria-busy="true">Loading live conditions…</p>
+        <h2 class="section-title reveal" id="conditions-title">Conditions &amp; Forecasts</h2>
+      <p class="conditions-lead reveal">Near-term wave, swell, and wind estimates for Satellite Beach, Cocoa Beach, and Melbourne Beach.</p>
+      <p id="conditions-status" class="conditions-status reveal" role="status" aria-live="polite" aria-busy="true">Loading live conditions…</p>
       <div id="conditions-root"></div>
       <noscript>
         <p>Live model numbers need JavaScript. The official source links below still work.</p>
       </noscript>
-      <div class="conditions-notes">
+      <div class="conditions-notes reveal">
         <h3>How we rate</h3>
         <p>Poor, Fair, and Good are estimates for an east-facing Space Coast beach. They are not a report from the water.</p>
         <p>The compass label is the nearest of 16 points. Southwest, west-southwest, and west count as offshore. Northeast, east-northeast, and east count as onshore. Any other point counts as cross-shore. A rounded speed of 0 mph is calm, and calm ignores direction.</p>
@@ -1369,10 +1553,17 @@
       </div>
     </section>
 
-    <section class="band reveal" id="guide" aria-labelledby="guide-title">
+    <div class="wave-divider wave-divider-slow" aria-hidden="true">
+      <svg class="wave-divider-svg" viewBox="0 0 2880 80" preserveAspectRatio="none" focusable="false">
+        <path class="wave-line wave-line-warm" vector-effect="non-scaling-stroke" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" d="M0 28 Q180 6 360 28 T720 28 T1080 28 T1440 28 T1800 28 T2160 28 T2520 28 T2880 28"/>
+        <path class="wave-line wave-line-glass" vector-effect="non-scaling-stroke" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M0 52 Q180 30 360 52 T720 52 T1080 52 T1440 52 T1800 52 T2160 52 T2520 52 T2880 52"/>
+      </svg>
+    </div>
+
+    <section class="band" id="guide" aria-labelledby="guide-title">
       <div class="wrap stack">
-        <h2 class="section-title" id="guide-title">Visitor Guide</h2>
-        <div class="story-card">
+        <h2 class="section-title reveal" id="guide-title">Visitor Guide</h2>
+        <div class="story-card reveal">
           <p>Where to stay, eat, rent boards, and respect local etiquette. Content to be built out by the bots based on founder vision.</p>
         </div>
       </div>
@@ -1478,30 +1669,268 @@
 
       spy();
       window.addEventListener("scroll", spy, { passive: true });
+    })();
+  </script>
 
-      var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-      if (!reduce && "IntersectionObserver" in window) {
-        var nodes = Array.prototype.slice.call(document.querySelectorAll(".reveal"));
-        function inView(el) {
-          var rect = el.getBoundingClientRect();
-          return rect.top < window.innerHeight * 0.92 && rect.bottom > 0;
+  <script>
+    /* Scroll reveal and the wave-height count-up.
+       Does not fetch, score, or rewrite conditions copy. */
+    (function () {
+      var root = document.documentElement;
+      var reduceQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+      var motionOn = root.classList.contains("js-motion") && !reduceQuery.matches;
+      var pending = [];
+      var observer = null;
+      var listening = false;
+      var scanScheduled = false;
+
+      function inView(el) {
+        var rect = el.getBoundingClientRect();
+        var height = window.innerHeight || document.documentElement.clientHeight;
+        return rect.bottom > 0 && rect.top < height * 0.92;
+      }
+
+      function heroesIn(el) {
+        var list = [];
+        if (!el || !el.classList) return list;
+        if (el.classList.contains("wave-hero")) list.push(el);
+        if (el.querySelectorAll) {
+          Array.prototype.forEach.call(el.querySelectorAll(".wave-hero"), function (hero) {
+            list.push(hero);
+          });
         }
-        root.classList.add("js-motion");
-        var pending = [];
-        nodes.forEach(function (el) {
-          if (inView(el)) el.classList.add("is-in");
-          else pending.push(el);
+        return list;
+      }
+
+      function lockCountWidth(visual, finalText) {
+        var digits = String(finalText).replace(/\D/g, "").length;
+        visual.style.minWidth = (digits + 0.65) + "ch";
+      }
+
+      function prepareHero(hero) {
+        if (!hero || hero.hasAttribute("data-wave")) return;
+        var node = null;
+        var children = hero.childNodes;
+        var i;
+        for (i = 0; i < children.length; i++) {
+          if (children[i].nodeType === 3 && children[i].nodeValue.trim() !== "") {
+            node = children[i];
+            break;
+          }
+        }
+        if (!node) return;
+        var target = parseFloat(node.nodeValue.trim());
+        if (!Number.isFinite(target)) return;
+        var finalText = target.toFixed(1);
+        hero.setAttribute("data-wave", finalText);
+
+        var visual = document.createElement("span");
+        visual.className = "wave-count";
+        visual.setAttribute("aria-hidden", "true");
+        visual.textContent = finalText;
+        lockCountWidth(visual, finalText);
+
+        var spoken = document.createElement("span");
+        spoken.className = "visually-hidden";
+        spoken.textContent = finalText;
+
+        node.parentNode.replaceChild(visual, node);
+        if (visual.nextSibling) visual.parentNode.insertBefore(spoken, visual.nextSibling);
+        else visual.parentNode.appendChild(spoken);
+
+        if (!motionOn || reduceQuery.matches || target === 0) {
+          hero.setAttribute("data-counted", "done");
+          visual.textContent = finalText;
+          return;
+        }
+        visual.textContent = "0.0";
+      }
+
+      function cancelCount(hero) {
+        if (!hero) return;
+        if (hero._countTimer) window.clearTimeout(hero._countTimer);
+        if (hero._countRaf) window.cancelAnimationFrame(hero._countRaf);
+        hero._countTimer = 0;
+        hero._countRaf = 0;
+      }
+
+      function snapHero(hero) {
+        cancelCount(hero);
+        var visual = hero.querySelector(".wave-count");
+        var finalText = hero.getAttribute("data-wave");
+        if (visual && finalText) visual.textContent = finalText;
+        hero.setAttribute("data-counted", "done");
+      }
+
+      function startCount(hero, delay) {
+        if (!hero || hero.getAttribute("data-counted")) return;
+        if (!motionOn || reduceQuery.matches) return;
+        var visual = hero.querySelector(".wave-count");
+        var target = parseFloat(hero.getAttribute("data-wave"));
+        if (!visual || !Number.isFinite(target)) return;
+        hero.setAttribute("data-counted", "queued");
+        hero._countTimer = window.setTimeout(function () {
+          hero._countTimer = 0;
+          if (hero.getAttribute("data-counted") === "done") return;
+          if (reduceQuery.matches || !motionOn) {
+            snapHero(hero);
+            return;
+          }
+          hero.setAttribute("data-counted", "running");
+          var finalText = target.toFixed(1);
+          var startTime = null;
+          visual.textContent = "0.0";
+          function finish() {
+            visual.textContent = finalText;
+            hero.setAttribute("data-counted", "done");
+            hero._countRaf = 0;
+          }
+          function frame(now) {
+            if (reduceQuery.matches || !motionOn) {
+              snapHero(hero);
+              return;
+            }
+            if (startTime === null) startTime = now;
+            var t = Math.min(1, (now - startTime) / 900);
+            var eased = 1 - Math.pow(1 - t, 3);
+            var next = (target * eased).toFixed(1);
+            if (visual.textContent !== next) visual.textContent = next;
+            if (t < 1) hero._countRaf = window.requestAnimationFrame(frame);
+            else finish();
+          }
+          hero._countRaf = window.requestAnimationFrame(frame);
+        }, delay || 0);
+      }
+
+      function cardDelay(el) {
+        if (!el.parentNode || el.parentNode.id !== "conditions-root") return 0;
+        var index = Array.prototype.indexOf.call(el.parentNode.children, el);
+        return index > 0 ? index * 90 : 0;
+      }
+
+      function stopListening() {
+        if (!listening) return;
+        listening = false;
+        window.removeEventListener("scroll", scheduleScan);
+        window.removeEventListener("resize", scheduleScan);
+        window.removeEventListener("hashchange", scheduleScan);
+      }
+
+      function ensureListening() {
+        if (listening) return;
+        listening = true;
+        window.addEventListener("scroll", scheduleScan, { passive: true });
+        window.addEventListener("resize", scheduleScan, { passive: true });
+        window.addEventListener("hashchange", scheduleScan);
+      }
+
+      function revealEl(el) {
+        if (!el || el.classList.contains("is-in")) return;
+        el.classList.add("is-in");
+        var index = pending.indexOf(el);
+        if (index !== -1) pending.splice(index, 1);
+        if (observer) observer.unobserve(el);
+        var delay = cardDelay(el);
+        heroesIn(el).forEach(function (hero) {
+          prepareHero(hero);
+          startCount(hero, delay);
         });
-        if (pending.length) {
-          var observer = new IntersectionObserver(function (entries) {
+        if (!pending.length) stopListening();
+      }
+
+      function scheduleScan() {
+        if (scanScheduled) return;
+        scanScheduled = true;
+        window.requestAnimationFrame(function () {
+          scanScheduled = false;
+          pending.slice().forEach(function (el) {
+            if (inView(el)) revealEl(el);
+          });
+        });
+      }
+
+      function watch(el) {
+        pending.push(el);
+        ensureListening();
+        if (observer) observer.observe(el);
+      }
+
+      function armInitial(el) {
+        if (!el || el.getAttribute("data-armed") === "1") return;
+        el.setAttribute("data-armed", "1");
+        if (!motionOn || inView(el)) revealEl(el);
+        else watch(el);
+      }
+
+      function armCard(card) {
+        if (!card || card.getAttribute("data-armed") === "1") return;
+        card.setAttribute("data-armed", "1");
+        card.classList.add("reveal");
+        heroesIn(card).forEach(prepareHero);
+        if (!motionOn) {
+          card.classList.add("is-in");
+          return;
+        }
+        if (inView(card)) {
+          window.requestAnimationFrame(function () {
+            window.requestAnimationFrame(function () { revealEl(card); });
+          });
+          return;
+        }
+        watch(card);
+      }
+
+      try {
+        if (motionOn && "IntersectionObserver" in window) {
+          observer = new IntersectionObserver(function (entries) {
             entries.forEach(function (entry) {
               if (!entry.isIntersecting) return;
-              entry.target.classList.add("is-in");
-              observer.unobserve(entry.target);
+              revealEl(entry.target);
             });
-          }, { threshold: 0.16 });
-          pending.forEach(function (el) { observer.observe(el); });
+          }, { root: null, rootMargin: "0px 0px -8% 0px", threshold: 0 });
         }
+
+        Array.prototype.forEach.call(document.querySelectorAll(".reveal"), armInitial);
+
+        document.addEventListener("focusin", function (event) {
+          var target = event.target;
+          if (!target || !target.closest) return;
+          var el = target.closest(".reveal");
+          if (el) revealEl(el);
+          scheduleScan();
+        });
+
+        var conditionsRoot = document.getElementById("conditions-root");
+        if (conditionsRoot) {
+          Array.prototype.forEach.call(conditionsRoot.querySelectorAll(".condition-card"), armCard);
+          if ("MutationObserver" in window) {
+            var mo = new MutationObserver(function () {
+              Array.prototype.forEach.call(conditionsRoot.querySelectorAll(".condition-card"), armCard);
+            });
+            mo.observe(conditionsRoot, { childList: true });
+          }
+        }
+
+        if (reduceQuery.addEventListener) {
+          reduceQuery.addEventListener("change", function () {
+            if (!reduceQuery.matches) return;
+            motionOn = false;
+            root.classList.remove("js-motion");
+            pending.slice().forEach(revealEl);
+            Array.prototype.forEach.call(document.querySelectorAll(".wave-hero[data-wave]"), snapHero);
+          });
+        }
+
+        window.setTimeout(function () {
+          pending.slice().forEach(function (el) {
+            if (inView(el)) revealEl(el);
+          });
+        }, 1000);
+
+        window.addEventListener("pageshow", scheduleScan);
+      } catch (error) {
+        root.classList.remove("js-motion");
+        Array.prototype.forEach.call(document.querySelectorAll(".wave-hero[data-wave]"), snapHero);
       }
     })();
   </script>
