@@ -4,8 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Satellite Beach Surf Guide</title>
-  <meta name="description" content="Spots and culture across Satellite Beach, Cocoa Beach, and Melbourne.">
-  <meta name="theme-color" content="#072A40">
+  <meta name="description" content="The paddle-out is the point. Tides, wind, and spots across Satellite Beach, Cocoa Beach, and Melbourne.">
+  <meta name="theme-color" content="#03141C">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,600..800&display=swap" rel="stylesheet">
@@ -13,6 +13,29 @@
   <script>
     document.documentElement.classList.add("js");
     if (window.scrollY <= 24) document.documentElement.classList.add("nav-over-hero");
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      document.documentElement.classList.add("reduced-motion");
+    }
+    /* Hero swap. video and ambient are prefixes:
+       {name}.webm, {name}.mp4, {name}-mobile.webm, {name}-mobile.mp4.
+       poster and endPoster are prefixes: .webp and .jpg.
+       poster is still A (autoplay LCP). endPoster is the aerial closer
+       (reduced motion, save-data, low battery).
+       The full cut plays once. ambient is the 5s aerial loop after it.
+       headlineOut and lockupAt are seconds on the full cut, not page time.
+       Generated artwork, not a photograph and not Satellite Beach.
+       Unused still, not wired: assets/video/hero-still-b.jpg
+       Documented alternates (Pexels License), not shipped:
+         Sandro Giambruno — https://www.pexels.com/video/people-doing-surfing-together-6179548/
+         Ron Lach — https://www.pexels.com/video/man-and-women-running-in-the-beach-10495030/ */
+    window.SURF_HERO = {
+      video: "assets/video/hero",
+      ambient: "assets/video/hero-ambient",
+      poster: "assets/video/hero-poster",
+      endPoster: "assets/video/hero-end",
+      headlineOut: 14,
+      lockupAt: 20
+    };
   </script>
   <style>
     /* Visual Direction v1. Tokens first, then components.
@@ -48,6 +71,16 @@
       --color-sea-glass-soft: #D7EDEB;
       --color-sunrise-soft: #F3E0D1;
       --color-ocean-overlay: rgba(7, 42, 64, 0.55);
+      /* Night register (v3). v1 tokens above stay for foam cards and badges. */
+      --color-abyss: #03141C;
+      --color-night-ocean: #051E2C;
+      --color-coal: #160E0B;
+      --color-ember: #B44A14;
+      --color-flame: #E8A04A;
+      --color-ash: #C4B8A8;
+      --color-ember-soft: rgba(180, 74, 20, 0.28);
+      --color-flame-soft: rgba(232, 160, 74, 0.16);
+      --color-night-overlay: rgba(3, 20, 28, 0.72);
       /* Title font swap (Nov 21, 2026): Fraunces → Bodoni Moda. Body/UI (Outfit) unchanged. */
       --font-display: "Bodoni Moda", "Bodoni 72", Didot, Georgia, serif;
       --font-body: "Outfit", system-ui, sans-serif;
@@ -1357,6 +1390,536 @@
       .condition-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-lift); }
     }
 
+    /* Visual direction v3 — night through the whole page.
+       Foam cards keep v1 ink type. Display type is foam or sand, never flame. */
+    html { color-scheme: dark; }
+
+    body {
+      color: var(--color-foam);
+      background: var(--color-abyss);
+    }
+
+    .section-title {
+      color: var(--color-foam);
+      font-weight: 600;
+    }
+
+    .section-dek {
+      max-width: 38rem;
+      color: var(--color-sand);
+      font-size: var(--fs-body);
+      line-height: 1.65;
+      text-wrap: balance;
+    }
+
+    .section-kicker {
+      color: var(--color-flame);
+      font-family: var(--font-body);
+      font-size: var(--fs-caption);
+      font-weight: 600;
+      letter-spacing: 0.16em;
+      line-height: 1.4;
+      text-transform: uppercase;
+    }
+
+    .section-kicker::after {
+      content: "";
+      display: block;
+      width: 2.5rem;
+      height: 2px;
+      margin-top: var(--space-1);
+      background: var(--color-ember);
+    }
+
+    .site-header { background: var(--color-night-ocean); }
+
+    .js.nav-over-hero .site-header:not(.is-solid):not(.is-open) {
+      background: rgba(5, 30, 44, 0.46);
+    }
+
+    .site-nav a:hover,
+    .site-nav a:focus-visible,
+    .site-nav a[aria-current="page"],
+    .brand:hover,
+    .brand:focus-visible,
+    .nav-toggle:hover,
+    .nav-toggle:focus-visible,
+    .drawer-close:hover,
+    .drawer-close:focus-visible {
+      background: var(--color-flame-soft);
+      color: var(--color-foam);
+    }
+
+    .site-nav a[aria-current="page"] {
+      background: transparent;
+      color: var(--color-foam);
+      box-shadow: inset 0 -2px 0 var(--color-flame);
+    }
+
+    .nav-toggle,
+    .drawer-close {
+      background: rgba(3, 20, 28, 0.55);
+      color: var(--color-foam);
+      border: 1px solid rgba(247, 244, 239, 0.4);
+    }
+
+    .nav-scrim { background: rgba(3, 20, 28, 0.62); }
+
+    .hero {
+      justify-content: flex-start;
+      min-height: 100svh;
+      padding-top: calc(var(--space-12) + var(--space-4));
+      padding-bottom: var(--space-8);
+      background: var(--color-abyss);
+    }
+
+    .hero-content {
+      align-items: flex-start;
+      text-align: left;
+    }
+
+    .hero h1 {
+      max-width: 11em;
+      color: var(--color-foam);
+      font-weight: 700;
+      text-shadow: 0 2px 22px rgba(3, 20, 28, 0.72);
+    }
+
+    .hero-dek {
+      max-width: 28rem;
+      color: var(--color-sand);
+      font-size: var(--fs-body);
+      font-weight: 400;
+      line-height: 1.6;
+      text-wrap: balance;
+      text-shadow: 0 1px 14px rgba(3, 20, 28, 0.7);
+    }
+
+    .hero .btn-primary {
+      background: var(--color-abyss);
+      color: var(--color-foam);
+      border: 1.5px solid rgba(247, 244, 239, 0.82);
+      box-shadow: none;
+    }
+
+    .hero .btn-primary:hover,
+    .hero .btn-primary:focus-visible {
+      background: var(--color-ember);
+      color: var(--color-foam);
+      border-color: var(--color-ember);
+    }
+
+    .hero .btn-secondary {
+      background: transparent;
+      color: var(--color-foam);
+      border: 1.5px solid rgba(232, 212, 176, 0.85);
+    }
+
+    .hero .btn-secondary:hover,
+    .hero .btn-secondary:focus-visible {
+      background: var(--color-flame-soft);
+      color: var(--color-foam);
+    }
+
+    .hero-play { margin-top: 0; }
+
+    .hero-still,
+    .hero-video,
+    .hero-fallback {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      max-width: none;
+    }
+
+    .hero-still { display: block; z-index: 0; }
+
+    .hero-still img,
+    .hero-fallback {
+      width: 100%;
+      height: 100%;
+      max-width: none;
+      object-fit: cover;
+      object-position: 32% 58%;
+    }
+
+    .hero-video {
+      z-index: 1;
+      object-fit: cover;
+      object-position: 32% 58%;
+      opacity: 0;
+    }
+
+    .hero-video.is-playing { opacity: 1; }
+
+    .hero-grain { z-index: 2; opacity: 0.06; }
+
+    .hero-overlay {
+      z-index: 3;
+      background:
+        linear-gradient(180deg, rgba(3, 20, 28, 0.72) 0%, rgba(3, 20, 28, 0.28) 28%, rgba(3, 20, 28, 0.2) 52%, rgba(180, 74, 20, 0.14) 78%, rgba(3, 20, 28, 0.78) 100%),
+        linear-gradient(90deg, rgba(3, 20, 28, 0.78) 0%, rgba(3, 20, 28, 0.42) 42%, rgba(3, 20, 28, 0.12) 100%);
+    }
+
+    .hero-credit {
+      position: static;
+      left: auto;
+      right: auto;
+      bottom: auto;
+      width: auto;
+      max-width: 36rem;
+      margin: var(--space-3) 0 0;
+      color: var(--color-foam);
+      font-size: 1.0625rem;
+      font-weight: 500;
+      line-height: 1.45;
+      text-align: left;
+      text-shadow: none;
+      width: fit-content;
+      padding: 0.45rem 0.7rem;
+      border-radius: 8px;
+      background: rgba(3, 20, 28, 0.72);
+    }
+
+    .hero-credit a { color: var(--color-foam); }
+
+    .hero-divider { color: var(--color-abyss); }
+
+    #culture,
+    #guide { background: var(--color-night-ocean); }
+
+    .note { color: var(--color-sand); }
+
+    .photo-caption { color: var(--color-ash); }
+
+    .photo-caption a,
+    .site-footer a { color: var(--color-foam); }
+
+    .spot-card,
+    .condition-card,
+    .conditions-card,
+    .hour-scroll,
+    .day-scroll {
+      background: var(--color-foam);
+      color: var(--color-ink);
+      border-color: rgba(7, 42, 64, 0.1);
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
+    }
+
+    .spot-card,
+    .condition-card,
+    .conditions-card,
+    .hour-scroll,
+    .day-scroll { color-scheme: light; }
+
+    .spot-photo img,
+    .culture-frame img {
+      filter: saturate(0.78) brightness(0.8) contrast(1.06);
+    }
+
+    .spot-media::after,
+    .culture-frame picture::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: linear-gradient(180deg, rgba(3, 20, 28, 0.04), rgba(3, 20, 28, 0.38));
+    }
+
+    .culture-frame picture { display: block; position: relative; }
+
+    .culture-portrait-frame {
+      box-shadow: 0 0 0 1px var(--color-ember);
+    }
+
+    .culture-portrait-frame img {
+      filter: grayscale(1) contrast(1.05);
+    }
+
+    .culture-pull {
+      max-width: 10em;
+      color: var(--color-foam);
+      font-size: clamp(2rem, 1.35rem + 2vw, 3.35rem);
+      font-weight: 600;
+    }
+
+    .conditions-lead { color: var(--color-sand); }
+
+    #conditions .conditions-status {
+      color: var(--color-ash);
+      background: transparent;
+    }
+
+    #conditions .conditions-status.is-error {
+      background: var(--color-foam);
+      color: var(--color-poor);
+    }
+
+    .conditions-notes h3 { color: var(--color-foam); }
+
+    .conditions-notes p,
+    .conditions-notes li { color: var(--color-sand); }
+
+    .disclaimer,
+    .sources,
+    .tide-line,
+    .photo-credits { color: var(--color-ash); }
+
+    .conditions-notes a { color: var(--color-flame); }
+
+    .conditions-notes a:hover,
+    .conditions-notes a:focus-visible {
+      background: var(--color-ember);
+      color: var(--color-foam);
+    }
+
+    .site-footer {
+      background: var(--color-night-ocean);
+      border-top: 1px solid rgba(180, 74, 20, 0.45);
+    }
+
+    :root { --nav-height: 4rem; }
+
+    .hero-lockup {
+      position: absolute;
+      left: 50%;
+      top: calc(var(--nav-height, 4rem) + clamp(1.5rem, 4vh, 3rem));
+      z-index: 4;
+      width: min(92vw, 40rem);
+      transform: translateX(-50%);
+      text-align: center;
+      pointer-events: none;
+      opacity: 0;
+    }
+
+    .hero.is-playing .hero-lockup {
+      transition: opacity 1200ms var(--ease-out);
+    }
+
+    .hero-lockup.is-in { opacity: 1; }
+
+    .hero-lockup .wordmark {
+      margin: 0;
+      color: var(--color-foam);
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: clamp(2.25rem, 1.1rem + 3.2vw, 4.5rem);
+      font-optical-sizing: auto;
+      letter-spacing: 0.06em;
+      line-height: 1.05;
+    }
+
+    .hero-lockup .rule {
+      width: 52%;
+      height: 2px;
+      margin: 0.7em auto 0.55em;
+      background: var(--color-flame);
+    }
+
+    .hero-lockup .sub {
+      margin: 0;
+      color: var(--color-sand);
+      font-family: var(--font-body);
+      font-weight: 600;
+      font-size: clamp(0.7rem, 0.55rem + 0.35vw, 0.95rem);
+      letter-spacing: 0.28em;
+      line-height: 1.4;
+      text-transform: uppercase;
+    }
+
+    .hero.is-playing .hero-title,
+    .hero.is-playing .hero-dek {
+      transition: opacity 700ms var(--ease-out);
+    }
+
+    .hero.is-story-out .hero-title,
+    .hero.is-story-out .hero-dek,
+    .reduced-motion .hero-title,
+    .reduced-motion .hero-dek,
+    .hero.is-resolved .hero-title,
+    .hero.is-resolved .hero-dek {
+      opacity: 0;
+    }
+
+    .site-header.is-lockup .brand,
+    .reduced-motion .brand,
+    .hero-settled .brand {
+      opacity: 0;
+    }
+
+    .hero-settled .hero-lockup { opacity: 1; }
+
+    .hero-settled .hero-title,
+    .hero-settled .hero-dek { opacity: 0; }
+
+    .hero.is-story-out .hero-overlay,
+    .reduced-motion .hero-overlay,
+    .hero-settled .hero-overlay {
+      background: linear-gradient(180deg, rgba(3, 20, 28, 0.34) 0%, rgba(3, 20, 28, 0.08) 28%, rgba(3, 20, 28, 0) 42%);
+    }
+
+    @media (max-width: 767px) {
+      .hero {
+        aspect-ratio: auto;
+        /* Plate is the bottom band. Extra height above it is sky for the lockup
+           and the opening type. A 4:5 cover only shows 45% of this 16:9 frame;
+           the fire and the second paddler span about 62%, so the plate is that window. */
+        min-height: calc(100vw * 0.92 + 8.5rem);
+        padding-top: calc(var(--nav-height, 4rem) + 8px);
+        padding-bottom: 6.5rem;
+      }
+
+      .hero-content { gap: 12px; }
+
+      .hero-divider { height: 40px; }
+
+      /* Window x = 10%–72% of the frame, full height, pinned to the bottom.
+         object-position cannot do this inside a 4:5 cover. */
+      .hero-still,
+      .hero-video,
+      .hero-fallback {
+        inset: auto;
+        top: auto;
+        right: auto;
+        bottom: 0;
+        left: -16.13%;
+        width: 161.3%;
+        height: auto;
+        max-width: none;
+        aspect-ratio: 16 / 9;
+        object-fit: fill;
+        -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 14%, #000 100%);
+        mask-image: linear-gradient(to bottom, transparent 0%, #000 14%, #000 100%);
+      }
+
+      .hero-still img,
+      .hero-fallback {
+        width: 100%;
+        height: 100%;
+        object-fit: fill;
+        object-position: center;
+      }
+
+      .hero.is-story-out .hero-title,
+      .hero.is-story-out .hero-dek,
+      .reduced-motion .hero-title,
+      .reduced-motion .hero-dek,
+      .hero-settled .hero-title,
+      .hero-settled .hero-dek {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        margin: -1px;
+        padding: 0;
+        overflow: hidden;
+        clip: rect(0 0 0 0);
+        white-space: nowrap;
+      }
+
+      .hero.is-story-out .hero-content,
+      .reduced-motion .hero .hero-content,
+      .hero-settled .hero .hero-content {
+        position: static;
+        margin-top: 0;
+      }
+
+      .hero.is-story-out .hero-credit,
+      .reduced-motion .hero-credit,
+      .hero-settled .hero-credit {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0 0 0 0);
+      }
+
+      /* Below the lockup, over the open water, clear of the fire on the left
+         and the paddlers at the lower right. */
+      .hero.is-story-out .hero-actions,
+      .reduced-motion .hero-actions,
+      .hero-settled .hero-actions {
+        position: absolute;
+        z-index: 4;
+        left: auto;
+        right: 1.15rem;
+        bottom: 31%;
+        width: 11rem;
+        margin: 0;
+      }
+
+      .hero-lockup {
+        top: calc(var(--nav-height, 4rem) + env(safe-area-inset-top, 0px) + var(--space-4));
+      }
+
+      .js .site-nav {
+        background: var(--color-night-ocean);
+        color: var(--color-foam);
+      }
+
+      .hero-credit {
+        position: static;
+        left: auto;
+        right: auto;
+        bottom: auto;
+        width: auto;
+        max-width: 100%;
+        margin-top: 0;
+        font-size: 0.8125rem;
+        text-align: left;
+      }
+    }
+
+    @media (min-width: 768px) {
+      .hero {
+        min-height: min(92vh, 860px);
+        justify-content: flex-start;
+        padding-top: calc(var(--space-12) + var(--space-8));
+      }
+
+      .hero-overlay {
+        background:
+          linear-gradient(90deg, rgba(3, 20, 28, 0.86) 0%, rgba(3, 20, 28, 0.62) 34%, rgba(3, 20, 28, 0.22) 58%, rgba(3, 20, 28, 0.16) 100%),
+          linear-gradient(180deg, rgba(3, 20, 28, 0.58) 0%, rgba(3, 20, 28, 0.1) 32%, rgba(180, 74, 20, 0.16) 72%, rgba(3, 20, 28, 0.7) 100%);
+      }
+
+      .hero-still img,
+      .hero-fallback,
+      .hero-video { object-position: center 46%; }
+
+      .hero.is-story-out .hero-content,
+      .reduced-motion .hero .hero-content,
+      .hero-settled .hero .hero-content {
+        position: static;
+      }
+
+      .hero.is-story-out .hero-credit,
+      .reduced-motion .hero-credit,
+      .hero-settled .hero-credit {
+        position: absolute;
+        z-index: 5;
+        right: max(var(--space-4), calc((100% - min(100% - 2 * var(--space-4), var(--content-max))) / 2));
+        bottom: calc(var(--space-10) + var(--space-2));
+        left: auto;
+        width: auto;
+        max-width: 22rem;
+        margin: 0;
+        font-size: 0.875rem;
+        line-height: 1.4;
+        text-align: left;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .hero-video { display: none !important; }
+      .hero-lockup { opacity: 1; transition: none; }
+      .hero-title,
+      .hero-dek,
+      .brand { transition: none; }
+    }
+
   </style>
 </head>
 <body>
@@ -1387,45 +1950,48 @@
 
   <main id="main" tabindex="-1">
     <section class="hero" id="top" aria-labelledby="hero-title">
-      <div class="hero-scene">
-        <svg class="hero-scene-svg" viewBox="0 0 1440 800" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false">
-          <defs>
-            <radialGradient id="sun-glow" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stop-color="#E8D4B0" stop-opacity="0.95"/>
-              <stop offset="42%" stop-color="#AD4E16" stop-opacity="0.4"/>
-              <stop offset="100%" stop-color="#AD4E16" stop-opacity="0"/>
-            </radialGradient>
-          </defs>
-          <rect width="1440" height="800" fill="#072A40"/>
-          <circle cx="1110" cy="280" r="210" fill="url(#sun-glow)"/>
-          <g class="hero-drift">
-            <path fill="#0E3A4A" d="M0 430C240 390 420 510 700 460C980 410 1180 520 1440 450V800H0Z"/>
-            <path fill="#2F7A76" fill-opacity="0.4" d="M0 530C200 480 380 600 660 540C960 476 1160 610 1440 530V800H0Z"/>
-            <path fill="#E8D4B0" fill-opacity="0.18" d="M0 630C260 590 480 700 760 640C1040 580 1240 700 1440 630V800H0Z"/>
-            <path fill="none" stroke="#F7F4EF" stroke-opacity="0.45" stroke-width="3" stroke-linecap="round" d="M0 575C220 535 400 640 680 585C980 526 1180 650 1440 575"/>
-            <path fill="none" stroke="#F7F4EF" stroke-opacity="0.28" stroke-width="2" stroke-linecap="round" d="M0 655C260 625 500 710 780 660C1060 610 1240 710 1440 655"/>
-          </g>
-        </svg>
-        <picture class="hero-photo" data-photo>
-          <source media="(max-width: 767px)" type="image/avif" srcset="assets/photos/hero-cocoa-aerial-mobile-800.avif 800w, assets/photos/hero-cocoa-aerial-mobile-1200.avif 1200w, assets/photos/hero-cocoa-aerial-mobile-1600.avif 1600w" sizes="100vw">
-          <source media="(max-width: 767px)" type="image/webp" srcset="assets/photos/hero-cocoa-aerial-mobile-800.webp 800w, assets/photos/hero-cocoa-aerial-mobile-1200.webp 1200w, assets/photos/hero-cocoa-aerial-mobile-1600.webp 1600w" sizes="100vw">
-          <source media="(max-width: 767px)" type="image/jpeg" srcset="assets/photos/hero-cocoa-aerial-mobile-800.jpg 800w, assets/photos/hero-cocoa-aerial-mobile-1200.jpg 1200w, assets/photos/hero-cocoa-aerial-mobile-1600.jpg 1600w" sizes="100vw">
-          <source type="image/avif" srcset="assets/photos/hero-cocoa-aerial-800.avif 800w, assets/photos/hero-cocoa-aerial-1600.avif 1600w, assets/photos/hero-cocoa-aerial-2400.avif 2400w, assets/photos/hero-cocoa-aerial-2880.avif 2880w" sizes="100vw">
-          <source type="image/webp" srcset="assets/photos/hero-cocoa-aerial-800.webp 800w, assets/photos/hero-cocoa-aerial-1600.webp 1600w, assets/photos/hero-cocoa-aerial-2400.webp 2400w, assets/photos/hero-cocoa-aerial-2880.webp 2880w" sizes="100vw">
-          <img src="assets/photos/hero-cocoa-aerial-2400.jpg" srcset="assets/photos/hero-cocoa-aerial-800.jpg 800w, assets/photos/hero-cocoa-aerial-1600.jpg 1600w, assets/photos/hero-cocoa-aerial-2400.jpg 2400w, assets/photos/hero-cocoa-aerial-2880.jpg 2880w" sizes="100vw" width="2880" height="1527" alt="Aerial sunrise along the Cocoa Beach shoreline, Atlantic waves on the left and the beach running to the horizon." fetchpriority="high" decoding="async" onerror="this.closest('[data-photo]').classList.add('is-fallback')">
+      <div class="hero-scene" id="hero-scene">
+        <picture class="hero-still" id="hero-still">
+          <source id="hero-poster-webp" type="image/webp">
+          <img id="hero-poster" alt="Generated artwork of a group with surfboards running into the ocean at night, a beach fire burning on the sand. Not a photograph of Satellite Beach." width="1600" height="900" fetchpriority="high" decoding="async">
         </picture>
+        <video id="hero-video" class="hero-video" muted playsinline preload="none" aria-hidden="true"></video>
         <div class="hero-grain" aria-hidden="true"></div>
-        <div class="hero-overlay"></div>
+        <div class="hero-overlay" aria-hidden="true"></div>
+        <noscript><img class="hero-fallback" src="assets/video/hero-poster.jpg" alt="Generated artwork of a group with surfboards running into the ocean at night, a beach fire burning on the sand. Not a photograph of Satellite Beach." width="1600" height="900"></noscript>
+      </div>
+      <script>
+        (function () {
+          var cfg = window.SURF_HERO;
+          if (!cfg) return;
+          var reduce = document.documentElement.classList.contains("reduced-motion");
+          var saveData = !!(navigator.connection && navigator.connection.saveData);
+          var settled = reduce || saveData;
+          var base = settled ? cfg.endPoster : cfg.poster;
+          var webp = document.getElementById("hero-poster-webp");
+          var img = document.getElementById("hero-poster");
+          if (webp) webp.srcset = base + ".webp";
+          if (img) {
+            img.src = base + ".jpg";
+            if (settled) img.alt = "Generated artwork, seen from above: a beach fire on the sand and a small group paddling out at dusk. Not a photograph of Satellite Beach.";
+          }
+          if (settled) document.documentElement.classList.add("hero-settled");
+        })();
+      </script>
+      <div class="hero-lockup" id="hero-lockup" aria-hidden="true">
+        <p class="wordmark">Satellite Beach</p>
+        <div class="rule"></div>
+        <p class="sub">Surf Guide</p>
       </div>
       <div class="wrap hero-content">
-        <h1 id="hero-title">Satellite Beach Surf Guide</h1>
-        <p class="hero-tagline">Spots and culture across Satellite Beach, Cocoa Beach, and Melbourne.</p>
+        <h1 class="hero-title" id="hero-title">The paddle-out is the point.</h1>
+        <p class="hero-dek">We read the tide, the wind, and the swell. You go in with your people.</p>
         <div class="hero-actions">
           <a class="btn btn-primary" href="#conditions">Check conditions</a>
           <a class="btn btn-secondary" href="#spots">Explore spots</a>
         </div>
+        <p class="hero-credit">Artwork: generated. A night run-in, a paddle-out, and a drone rise over a beach fire. Not a photograph, and not Satellite Beach.</p>
       </div>
-      <p class="hero-credit">Photo: <a href="https://unsplash.com/photos/B7nsKUoqHu8">Sky Gallian</a> via Unsplash · Cocoa Beach, Florida</p>
       <svg class="hero-divider" viewBox="0 0 1440 90" preserveAspectRatio="none" aria-hidden="true" focusable="false">
         <path fill="currentColor" d="M0 46C220 86 420 8 700 40C980 72 1180 14 1440 48V90H0Z"/>
       </svg>
@@ -1433,7 +1999,8 @@
 
     <section class="band reveal" id="spots" aria-labelledby="spots-title">
       <div class="wrap stack">
-        <h2 class="section-title" id="spots-title">Featured Surf Spots</h2>
+        <h2 class="section-title" id="spots-title">The same beaches. Still.</h2>
+        <p class="section-dek">Satellite, Cocoa, and Melbourne. Twenty minutes apart, and this one never rushed to catch up.</p>
         <div class="spot-list">
           <article class="spot-card reveal" id="spot-satellite-beach" aria-labelledby="spot-satellite-beach-title">
             <figure class="spot-figure">
@@ -1549,7 +2116,7 @@
 
     <section class="band reveal" id="culture" aria-labelledby="culture-title">
       <div class="wrap stack">
-        <h2 class="section-title" id="culture-title">Surfing Culture</h2>
+        <p class="section-kicker">Surfing Culture</p>
         <div class="culture-lead">
           <figure class="culture-portrait">
             <div class="culture-portrait-frame" data-photo>
@@ -1563,10 +2130,8 @@
             <figcaption class="photo-caption">Photo: <a href="https://www.pexels.com/photo/a-topless-man-wearing-silver-necklace-13694334/">Murillo Molissani</a> via Pexels</figcaption>
           </figure>
           <div class="culture-copy">
-            <p class="culture-pull">Watch the water, then go.</p>
-            <div class="story-card">
-              <p>From the Space Coast's unique blend of rocket launches and perfect waves to the tight-knit local crews, the area has a distinctive surf identity. Expect more stories, history, and local insights as the site grows.</p>
-            </div>
+            <h2 class="culture-pull" id="culture-title">The forecast is the tool. The paddle-out is the point.</h2>
+            <p class="section-dek">Around here the towns twenty minutes away have changed. Satellite Beach has not. The lineup is still where the connections happen.</p>
           </div>
         </div>
         <figure class="culture-frame" data-photo>
@@ -1590,8 +2155,8 @@
 
     <section class="band reveal" id="conditions" aria-labelledby="conditions-title">
       <div class="wrap stack">
-        <h2 class="section-title" id="conditions-title">Conditions &amp; Forecasts</h2>
-      <p class="conditions-lead">Near-term wave, swell, and wind estimates for Satellite Beach, Cocoa Beach, and Melbourne Beach.</p>
+        <h2 class="section-title" id="conditions-title">What's running.</h2>
+      <p class="conditions-lead">The tool — height, wind, tide, and a clear rating. Then close the phone.</p>
       <p id="conditions-status" class="conditions-status" role="status" aria-live="polite" aria-busy="true">Loading live conditions…</p>
       <div id="conditions-root"></div>
       <noscript>
@@ -1618,18 +2183,16 @@
 
     <section class="band reveal" id="guide" aria-labelledby="guide-title">
       <div class="wrap stack">
-        <h2 class="section-title" id="guide-title">Visitor Guide</h2>
-        <div class="story-card">
-          <p>Where to stay, eat, rent boards, and respect local etiquette. Content to be built out by the bots based on founder vision.</p>
-        </div>
+        <h2 class="section-title" id="guide-title">How to be here.</h2>
+        <p class="section-dek">Eat, stay, rent a board, and respect the lineup.</p>
       </div>
     </section>
   </main>
 
   <footer class="site-footer">
     <div class="wrap site-footer-inner">
-      <p>Satellite Beach Surf Guide &bull; Built and evolved by a Grok Bot team &bull; Modern surf aesthetic</p>
-      <p class="photo-credits">Photography: <a href="https://unsplash.com/photos/B7nsKUoqHu8">Sky Gallian</a>, <a href="https://unsplash.com/photos/Xv8ogjmM8Ew">Matt Benson</a> (Cocoa Beach boardwalk), <a href="https://unsplash.com/photos/NLJsTmQsaRk">Florian Schneider</a> via <a href="https://unsplash.com/license">Unsplash</a>. <a href="https://www.pexels.com/photo/woman-surfing-at-sunrise-on-melbourne-beach-in-florida-32168032/">Koen Swiers</a> via <a href="https://www.pexels.com/license/">Pexels</a>: <a href="https://www.pexels.com/photo/woman-surfing-at-sunrise-on-melbourne-beach-in-florida-32168032/">Melbourne Beach</a>, <a href="https://www.pexels.com/photo/surfing-adventure-in-cocoa-beach-florida-32168077/">Cocoa Beach wave</a>, <a href="https://www.pexels.com/photo/surfer-at-sunset-on-melbourne-beach-31803640/">Melbourne Beach sunset</a>. <a href="https://www.pexels.com/photo/a-topless-man-wearing-silver-necklace-13694334/">Murillo Molissani</a> via Pexels.</p>
+      <p>Satellite Beach Surf Guide &bull; Built and evolved by a Grok Bot team</p>
+      <p class="photo-credits">Hero: generated artwork of a night run-in, a paddle-out, and a drone rise over a beach fire. Not a photograph, and not Satellite Beach. Photography: <a href="https://unsplash.com/photos/B7nsKUoqHu8">Sky Gallian</a>, <a href="https://unsplash.com/photos/Xv8ogjmM8Ew">Matt Benson</a> (Cocoa Beach boardwalk), <a href="https://unsplash.com/photos/NLJsTmQsaRk">Florian Schneider</a> via <a href="https://unsplash.com/license">Unsplash</a>. <a href="https://www.pexels.com/photo/woman-surfing-at-sunrise-on-melbourne-beach-in-florida-32168032/">Koen Swiers</a> via <a href="https://www.pexels.com/license/">Pexels</a>: <a href="https://www.pexels.com/photo/woman-surfing-at-sunrise-on-melbourne-beach-in-florida-32168032/">Melbourne Beach</a>, <a href="https://www.pexels.com/photo/surfing-adventure-in-cocoa-beach-florida-32168077/">Cocoa Beach wave</a>, <a href="https://www.pexels.com/photo/surfer-at-sunset-on-melbourne-beach-31803640/">Melbourne Beach sunset</a>. <a href="https://www.pexels.com/photo/a-topless-man-wearing-silver-necklace-13694334/">Murillo Molissani</a> via Pexels.</p>
     </div>
   </footer>
 
@@ -2569,6 +3132,185 @@
       }
 
       load();
+    })();
+  </script>
+  <script>
+    (function () {
+      var cfg = window.SURF_HERO;
+      var video = document.getElementById("hero-video");
+      var scene = document.getElementById("hero-scene");
+      var hero = document.querySelector(".hero");
+      var lockup = document.getElementById("hero-lockup");
+      var header = document.querySelector("[data-header]");
+      var poster = document.getElementById("hero-poster");
+      if (!cfg || !video || !scene || !hero || !lockup) return;
+
+      var reduce = document.documentElement.classList.contains("reduced-motion");
+      if (reduce) {
+        video.remove();
+        return;
+      }
+
+      var phase = "story";
+      var mode = "auto";
+      var started = false;
+      var seen = false;
+      var root = document.documentElement;
+
+      function fileUrl(prefix) {
+        var mobile = window.matchMedia("(max-width: 767px)").matches;
+        var webm = video.canPlayType("video/webm; codecs=\"vp9\"") || video.canPlayType("video/webm");
+        if (mobile) return prefix + (webm ? "-mobile.webm" : "-mobile.mp4");
+        return prefix + (webm ? ".webm" : ".mp4");
+      }
+
+      function showSettled() {
+        root.classList.add("hero-settled");
+        if (poster && cfg.endPoster) {
+          poster.src = cfg.endPoster + ".jpg";
+          poster.alt = "Generated artwork, seen from above: a beach fire on the sand and a small group paddling out at dusk. Not a photograph of Satellite Beach.";
+          var webp = document.getElementById("hero-poster-webp");
+          if (webp) webp.srcset = cfg.endPoster + ".webp";
+        }
+      }
+
+      function clearSettled() {
+        root.classList.remove("hero-settled");
+        hero.classList.remove("is-story-out");
+        lockup.classList.remove("is-in");
+        if (header) header.classList.remove("is-lockup");
+        if (poster && cfg.poster) {
+          poster.src = cfg.poster + ".jpg";
+          poster.alt = "Generated artwork of a group with surfboards running into the ocean at night, a beach fire burning on the sand. Not a photograph of Satellite Beach.";
+          var webp = document.getElementById("hero-poster-webp");
+          if (webp) webp.srcset = cfg.poster + ".webp";
+        }
+      }
+
+      function mountStory() {
+        if (video.dataset.mounted === "1") return;
+        video.dataset.mounted = "1";
+        video.loop = false;
+        video.muted = true;
+        video.defaultMuted = true;
+        video.playsInline = true;
+        video.setAttribute("playsinline", "");
+        video.preload = "auto";
+        video.poster = cfg.poster + ".jpg";
+        video.src = fileUrl(cfg.video);
+      }
+
+      function showTap() {
+        if (document.getElementById("hero-play")) return;
+        mode = "tap";
+        showSettled();
+        var btn = document.createElement("button");
+        btn.id = "hero-play";
+        btn.type = "button";
+        btn.className = "btn btn-secondary hero-play";
+        btn.textContent = "Play the film";
+        var actions = document.querySelector(".hero-actions");
+        (actions || scene).appendChild(btn);
+        btn.addEventListener("click", function () {
+          mode = "auto";
+          btn.hidden = true;
+          clearSettled();
+          tryPlay();
+        });
+      }
+
+      function showLockup() {
+        if (lockup.classList.contains("is-in")) return;
+        lockup.classList.add("is-in");
+        if (header) header.classList.add("is-lockup");
+      }
+
+      function onTime() {
+        if (phase !== "story") return;
+        var t = video.currentTime || 0;
+        if (t >= cfg.headlineOut) hero.classList.add("is-story-out");
+        if (t >= cfg.lockupAt) showLockup();
+      }
+
+      function playAmbient() {
+        phase = "ambient";
+        showLockup();
+        hero.classList.add("is-story-out");
+        video.loop = true;
+        video.src = fileUrl(cfg.ambient);
+        var pending = video.play();
+        if (pending && pending.catch) pending.catch(function () {});
+      }
+
+      function tryPlay() {
+        mountStory();
+        hero.classList.add("is-playing");
+        var pending = video.play();
+        if (pending && pending.then) {
+          pending.then(function () { started = true; }).catch(function () { showTap(); });
+        }
+      }
+
+      video.addEventListener("timeupdate", onTime);
+      video.addEventListener("ended", function () {
+        if (phase === "story") playAmbient();
+      });
+      video.addEventListener("playing", function () {
+        video.classList.add("is-playing");
+        hero.classList.add("is-playing");
+        started = true;
+      });
+
+      function onVisible(visible) {
+        seen = visible;
+        if (!visible) {
+          if (!video.paused) video.pause();
+          return;
+        }
+        if (mode === "tap" && !started) return;
+        tryPlay();
+      }
+
+      function watch() {
+        if (!("IntersectionObserver" in window)) {
+          if (mode === "auto") tryPlay();
+          return;
+        }
+        var io = new IntersectionObserver(function (entries) {
+          entries.forEach(function (entry) { onVisible(entry.isIntersecting); });
+        }, { threshold: 0.2 });
+        io.observe(scene);
+        document.addEventListener("visibilitychange", function () {
+          if (document.hidden) {
+            if (!video.paused) video.pause();
+          } else if (seen && (mode === "auto" || started)) {
+            var pending = video.play();
+            if (pending && pending.catch) pending.catch(function () {});
+          }
+        });
+      }
+
+      function begin(allowAuto) {
+        if (!allowAuto) {
+          showTap();
+          watch();
+          return;
+        }
+        watch();
+      }
+
+      if (root.classList.contains("hero-settled")) {
+        begin(false);
+        return;
+      }
+      if (navigator.getBattery) {
+        navigator.getBattery().then(function (battery) {
+          var low = battery && !battery.charging && battery.level <= 0.2;
+          begin(!low);
+        }).catch(function () { begin(true); });
+      } else {
+        begin(true);
+      }
     })();
   </script>
 </body>
