@@ -1762,21 +1762,45 @@
 
     @media (max-width: 767px) {
       .hero {
-        aspect-ratio: 4 / 5;
-        min-height: 0;
+        aspect-ratio: auto;
+        /* Plate is the bottom band. Extra height above it is sky for the lockup
+           and the opening type. A 4:5 cover only shows 45% of this 16:9 frame;
+           the fire and the second paddler span about 62%, so the plate is that window. */
+        min-height: calc(100vw * 0.92 + 8.5rem);
         padding-top: calc(var(--nav-height, 4rem) + 8px);
-        padding-bottom: 4.75rem;
+        padding-bottom: 6.5rem;
       }
 
       .hero-content { gap: 12px; }
 
       .hero-divider { height: 40px; }
 
-      /* Production aerial is wider than the review plate. 38% holds the
-         fire in the lower left and the near paddlers on the right. */
+      /* Window x = 10%–72% of the frame, full height, pinned to the bottom.
+         object-position cannot do this inside a 4:5 cover. */
+      .hero-still,
+      .hero-video,
+      .hero-fallback {
+        inset: auto;
+        top: auto;
+        right: auto;
+        bottom: 0;
+        left: -16.13%;
+        width: 161.3%;
+        height: auto;
+        max-width: none;
+        aspect-ratio: 16 / 9;
+        object-fit: fill;
+        -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 14%, #000 100%);
+        mask-image: linear-gradient(to bottom, transparent 0%, #000 14%, #000 100%);
+      }
+
       .hero-still img,
-      .hero-fallback,
-      .hero-video { object-position: 38% 50%; }
+      .hero-fallback {
+        width: 100%;
+        height: 100%;
+        object-fit: fill;
+        object-position: center;
+      }
 
       .hero.is-story-out .hero-title,
       .hero.is-story-out .hero-dek,
@@ -1797,7 +1821,8 @@
       .hero.is-story-out .hero-content,
       .reduced-motion .hero .hero-content,
       .hero-settled .hero .hero-content {
-        margin-top: 6.75rem;
+        position: static;
+        margin-top: 0;
       }
 
       .hero.is-story-out .hero-credit,
@@ -1811,11 +1836,18 @@
         clip: rect(0 0 0 0);
       }
 
+      /* Below the lockup, over the open water, clear of the fire on the left
+         and the paddlers at the lower right. */
       .hero.is-story-out .hero-actions,
       .reduced-motion .hero-actions,
       .hero-settled .hero-actions {
-        width: 11.5rem;
-        align-self: flex-start;
+        position: absolute;
+        z-index: 4;
+        left: auto;
+        right: 1.15rem;
+        bottom: 31%;
+        width: 11rem;
+        margin: 0;
       }
 
       .hero-lockup {
@@ -1856,6 +1888,28 @@
       .hero-still img,
       .hero-fallback,
       .hero-video { object-position: center 46%; }
+
+      .hero.is-story-out .hero-content,
+      .reduced-motion .hero .hero-content,
+      .hero-settled .hero .hero-content {
+        position: static;
+      }
+
+      .hero.is-story-out .hero-credit,
+      .reduced-motion .hero-credit,
+      .hero-settled .hero-credit {
+        position: absolute;
+        z-index: 5;
+        right: max(var(--space-4), calc((100% - min(100% - 2 * var(--space-4), var(--content-max))) / 2));
+        bottom: calc(var(--space-10) + var(--space-2));
+        left: auto;
+        width: auto;
+        max-width: 22rem;
+        margin: 0;
+        font-size: 0.875rem;
+        line-height: 1.4;
+        text-align: left;
+      }
     }
 
     @media (prefers-reduced-motion: reduce) {
